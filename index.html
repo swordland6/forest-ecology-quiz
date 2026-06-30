@@ -125,12 +125,51 @@
       backdrop-filter: blur(10px);
     }
 
+    .mode-tabs {
+      display: inline-flex;
+      min-height: 40px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .mode-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .mode-tab svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .mode-tab.is-active {
+      background: var(--green);
+      color: #fff;
+    }
+
     .toolbar-actions,
     .review-tools {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .button {
@@ -190,6 +229,24 @@
     .counter strong {
       color: var(--ink);
       font-size: 1.1rem;
+    }
+
+    .mistake-stat {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .mistake-stat strong {
+      color: var(--green);
     }
 
     select {
@@ -285,6 +342,18 @@
       font-size: 0.83rem;
     }
 
+    .mistake-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      margin-left: 8px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #eaf6ed;
+      color: var(--green);
+      font-weight: 800;
+    }
+
     .question-title {
       margin: 0;
       font-size: 1.02rem;
@@ -344,10 +413,14 @@
       border-color: rgba(47, 125, 92, 0.55);
     }
 
-    .choice.is-missed,
+    .choice.is-missed {
+      background: #eaf6ed;
+      border-color: rgba(47, 125, 92, 0.55);
+    }
+
     .choice.is-picked-wrong {
-      background: #fff0ef;
-      border-color: rgba(182, 73, 75, 0.42);
+      background: #fff6e8;
+      border-color: rgba(200, 121, 38, 0.42);
     }
 
     .answer-line {
@@ -355,8 +428,8 @@
       margin: 0 18px 18px 74px;
       padding: 10px 12px;
       border-radius: 8px;
-      background: #fbf4e8;
-      color: #6a421d;
+      background: #eaf6ed;
+      color: #245f48;
       font-size: 0.92rem;
     }
 
@@ -407,6 +480,16 @@
         flex-direction: column;
       }
 
+      .toolbar-actions,
+      .review-tools {
+        width: 100%;
+      }
+
+      #clear-mistakes {
+        flex-basis: 100%;
+        justify-content: center;
+      }
+
       .counter {
         min-width: 0;
       }
@@ -441,7 +524,7 @@
       <section class="title-block" aria-labelledby="page-title">
         <div class="eyebrow">Forest Ecology Question Bank</div>
         <h1 id="page-title">森林生态学刷题</h1>
-        <p class="lead">每轮随机抽 20 道选择题。答完提交后会即时判分，并把错题和正确答案留在页面里，适合一轮一轮刷。</p>
+        <p class="lead">覆盖生态学导论、物理环境、种群、群落、生态系统与全球变化的森林生态学题目集合。</p>
       </section>
       <figure class="forest-panel" aria-label="森林样方与树冠示意图">
         <svg viewBox="0 0 760 420" role="img" aria-labelledby="forest-title forest-desc">
@@ -477,6 +560,10 @@
 
     <nav class="toolbar" aria-label="刷题控制">
       <div class="toolbar-actions">
+        <div class="mode-tabs" role="group" aria-label="刷题模式">
+          <button class="mode-tab is-active" id="mode-practice" type="button" aria-pressed="true" title="随机练习"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>随机练习</button>
+          <button class="mode-tab" id="mode-mistakes" type="button" aria-pressed="false" title="练习错题本"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/><path d="M8 7h8"/><path d="M8 11h6"/></svg>错题本</button>
+        </div>
         <button class="button secondary" id="new-quiz" type="button" title="重新随机抽 20 题"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组</button>
         <button class="button submit" id="submit-quiz" type="button" title="提交并判分"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>提交判分</button>
         <button class="button secondary" id="reset-answers" type="button" title="清空当前选择"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 21-4-4L14 6l4 4L7 21Z"/><path d="M11 17h10"/><path d="m14 6 3-3 4 4-3 3"/></svg>清空选择</button>
@@ -488,6 +575,8 @@
           <option value="wrong">只看错题</option>
           <option value="unanswered">只看未答题</option>
         </select>
+        <span class="mistake-stat"><strong id="mistake-count">0</strong> 道错题</span>
+        <button class="button secondary" id="clear-mistakes" type="button" title="清空错题本"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>清空错题本</button>
         <div class="counter" aria-live="polite">
           <span><strong id="answered-count">0/20</strong> 已作答</span>
           <span id="bank-count">146 道可判分题</span>
@@ -2986,12 +3075,15 @@
   <script>
     const QUESTION_BANK = JSON.parse(document.getElementById("question-bank").textContent);
     const QUIZ_SIZE = 20;
+    const STORAGE_KEY = "forestEcologyMistakeBook.v1";
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const state = {
       quiz: [],
       selected: {},
       submitted: false,
-      filter: "all"
+      filter: "all",
+      mode: "practice",
+      mistakeBook: loadMistakeBook()
     };
 
     const quizForm = document.getElementById("quiz-form");
@@ -2999,6 +3091,53 @@
     const answeredCount = document.getElementById("answered-count");
     const reviewFilter = document.getElementById("review-filter");
     const liveStatus = document.getElementById("live-status");
+    const modePracticeButton = document.getElementById("mode-practice");
+    const modeMistakesButton = document.getElementById("mode-mistakes");
+    const mistakeCount = document.getElementById("mistake-count");
+    const clearMistakesButton = document.getElementById("clear-mistakes");
+
+    function loadMistakeBook() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return {};
+        const parsed = JSON.parse(saved);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveMistakeBook() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.mistakeBook));
+      } catch (error) {
+        liveStatus.textContent = "浏览器未能保存错题本，但当前页面仍可继续使用。";
+      }
+    }
+
+    function getMistakeEntry(questionId) {
+      return state.mistakeBook[questionId] || null;
+    }
+
+    function getMistakeQuestions() {
+      return Object.values(state.mistakeBook)
+        .map((entry) => QUESTION_BANK.find((question) => question.id === entry.id))
+        .filter(Boolean)
+        .sort((first, second) => {
+          const firstEntry = state.mistakeBook[first.id];
+          const secondEntry = state.mistakeBook[second.id];
+          if (secondEntry.wrongCount !== firstEntry.wrongCount) {
+            return secondEntry.wrongCount - firstEntry.wrongCount;
+          }
+          return String(secondEntry.lastWrongAt || "").localeCompare(String(firstEntry.lastWrongAt || ""));
+        });
+    }
+
+    function updateMistakeCount() {
+      const count = Object.keys(state.mistakeBook).length;
+      mistakeCount.textContent = String(count);
+      clearMistakesButton.disabled = count === 0;
+    }
 
     function shuffle(items) {
       const copy = [...items];
@@ -3046,6 +3185,46 @@
       return true;
     }
 
+    function recordMistakes() {
+      const now = new Date().toISOString();
+      state.quiz.forEach((question) => {
+        const selected = getSelected(question.id);
+        const existing = state.mistakeBook[question.id];
+
+        if (!isCorrect(question)) {
+          state.mistakeBook[question.id] = {
+            id: question.id,
+            stem: question.stem,
+            unit: question.unit,
+            answer_indices: question.answer_indices,
+            answer_letters: question.answer_letters,
+            wrongCount: existing ? existing.wrongCount + 1 : 1,
+            lastSelected: selected,
+            lastWrongAt: now
+          };
+        } else if (existing) {
+          state.mistakeBook[question.id] = {
+            ...existing,
+            lastSelected: selected,
+            lastCorrectAt: now
+          };
+        }
+      });
+      saveMistakeBook();
+      updateMistakeCount();
+    }
+
+    function setModeButtons() {
+      const practice = state.mode === "practice";
+      modePracticeButton.classList.toggle("is-active", practice);
+      modePracticeButton.setAttribute("aria-pressed", String(practice));
+      modeMistakesButton.classList.toggle("is-active", !practice);
+      modeMistakesButton.setAttribute("aria-pressed", String(!practice));
+      document.getElementById("new-quiz").innerHTML = practice
+        ? `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组`
+        : `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>刷新错题`;
+    }
+
     function renderScore() {
       if (!state.submitted) {
         scorePanel.className = "score-panel";
@@ -3076,11 +3255,16 @@
 
     function renderQuiz() {
       updateAnsweredCount();
+      updateMistakeCount();
+      setModeButtons();
       renderScore();
 
       const visibleQuestions = state.quiz.filter(questionShouldShow);
       if (!visibleQuestions.length) {
-        quizForm.innerHTML = '<div class="empty-state">当前筛选下没有题目。</div>';
+        const message = state.mode === "mistakes"
+          ? "错题本还没有题目。先做一组随机练习，提交后错题会自动收进来。"
+          : "当前筛选下没有题目。";
+        quizForm.innerHTML = `<div class="empty-state">${message}</div>`;
         return;
       }
 
@@ -3090,6 +3274,10 @@
     function renderQuestion(question) {
       const quizNumber = state.quiz.indexOf(question) + 1;
       const selected = getSelected(question.id);
+      const mistakeEntry = getMistakeEntry(question.id);
+      const mistakeBadge = mistakeEntry
+        ? `<span class="mistake-badge">做错 ${mistakeEntry.wrongCount} 次</span>`
+        : "";
       const reviewedClass = state.submitted ? " is-reviewed" : "";
       const statusClass = state.submitted
         ? isCorrect(question)
@@ -3127,7 +3315,7 @@
             <span class="question-no">${quizNumber}</span>
             <div>
               <h2 class="question-title">${escapeHtml(question.stem)}</h2>
-              <div class="question-meta">${escapeHtml(question.unit || "Question Bank")}</div>
+              <div class="question-meta">${escapeHtml(question.unit || "Question Bank")}${mistakeBadge}</div>
             </div>
           </div>
           <div class="choices">${choiceMarkup}</div>
@@ -3170,11 +3358,12 @@
 
     function submitQuiz() {
       state.submitted = true;
+      recordMistakes();
       state.filter = "all";
       reviewFilter.value = "all";
       renderQuiz();
       const correct = state.quiz.filter(isCorrect).length;
-      liveStatus.textContent = `已判分，答对 ${correct} 道。`;
+      liveStatus.textContent = `已判分，答对 ${correct} 道。错题本已更新。`;
       scorePanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
@@ -3187,21 +3376,57 @@
       liveStatus.textContent = "当前选择已清空。";
     }
 
-    function startQuiz() {
-      state.quiz = shuffle(QUESTION_BANK).slice(0, QUIZ_SIZE);
+    function resetSession() {
       state.selected = {};
       state.submitted = false;
       state.filter = "all";
       reviewFilter.value = "all";
+    }
+
+    function startPracticeQuiz() {
+      state.mode = "practice";
+      resetSession();
+      state.quiz = shuffle(QUESTION_BANK).slice(0, QUIZ_SIZE);
       renderQuiz();
       liveStatus.textContent = "已随机抽取新题组。";
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startMistakeQuiz() {
+      state.mode = "mistakes";
+      resetSession();
+      state.quiz = getMistakeQuestions().slice(0, QUIZ_SIZE);
+      renderQuiz();
+      liveStatus.textContent = state.quiz.length
+        ? "已进入错题本练习。"
+        : "错题本还没有题目。";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startQuiz() {
+      if (state.mode === "mistakes") {
+        startMistakeQuiz();
+        return;
+      }
+      startPracticeQuiz();
+    }
+
+    function clearMistakeBook() {
+      state.mistakeBook = {};
+      saveMistakeBook();
+      state.mode = "practice";
+      renderQuiz();
+      startPracticeQuiz();
+      liveStatus.textContent = "错题本已清空，并已切回随机练习。";
     }
 
     quizForm.addEventListener("change", handleChoiceChange);
     document.getElementById("new-quiz").addEventListener("click", startQuiz);
     document.getElementById("submit-quiz").addEventListener("click", submitQuiz);
     document.getElementById("reset-answers").addEventListener("click", resetAnswers);
+    modePracticeButton.addEventListener("click", startPracticeQuiz);
+    modeMistakesButton.addEventListener("click", startMistakeQuiz);
+    clearMistakesButton.addEventListener("click", clearMistakeBook);
     reviewFilter.addEventListener("change", (event) => {
       state.filter = event.target.value;
       renderQuiz();
