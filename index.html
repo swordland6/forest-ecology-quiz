@@ -300,6 +300,19 @@
       margin-top: 20px;
     }
 
+    .bottom-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 26px 0 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 10px 28px rgba(28, 42, 36, 0.07);
+    }
+
     .question-card {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -512,6 +525,15 @@
         padding: 8px 14px 16px 14px;
       }
 
+      .bottom-actions {
+        padding: 14px;
+      }
+
+      .bottom-actions .button {
+        flex: 1 1 150px;
+        justify-content: center;
+      }
+
       .answer-line {
         margin: 0 14px 16px 14px;
       }
@@ -579,13 +601,18 @@
         <button class="button secondary" id="clear-mistakes" type="button" title="清空错题本"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>清空错题本</button>
         <div class="counter" aria-live="polite">
           <span><strong id="answered-count">0/20</strong> 已作答</span>
-          <span id="bank-count">146 道可判分题</span>
+          <span id="bank-count">211 道可判分题</span>
         </div>
       </div>
     </nav>
 
     <section class="score-panel" id="score-panel" aria-live="polite"></section>
     <form class="quiz-form" id="quiz-form"></form>
+    <section class="bottom-actions" aria-label="底部答题操作">
+      <button class="button secondary" id="bottom-new-quiz" type="button" title="重新随机抽 20 题"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组</button>
+      <button class="button submit" id="bottom-submit-quiz" type="button" title="提交并判分"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>提交判分</button>
+      <button class="button secondary" id="bottom-reset-answers" type="button" title="清空当前选择"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 21-4-4L14 6l4 4L7 21Z"/><path d="M11 17h10"/><path d="m14 6 3-3 4 4-3 3"/></svg>清空选择</button>
+    </section>
     <div class="sr-only" id="live-status" aria-live="polite"></div>
   </main>
 
@@ -745,6 +772,23 @@
     "answer_letters": "E"
   },
   {
+    "id": "q12",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "10",
+    "stem": "Which environmental issue did  《Silent Spring》 （Rachel Carson's 1962） bring to public's attention?",
+    "choices": [
+      "Global warming",
+      "Chemical pollutants",
+      "Loss of biodiversity",
+      "Exotic species",
+      "Eutrophication"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
     "id": "q13",
     "unit": "Unit 1: Introduction to Ecology",
     "source_question_no": "11",
@@ -779,6 +823,54 @@
     "answer_letters": "B"
   },
   {
+    "id": "q15",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "",
+    "stem": "Who gave the word ecology its current broad meaning?",
+    "choices": [
+      "the German zoologist Ernst Haeckel",
+      "the English naturalist Charles Darwin",
+      "the Swedish botanist Carl Linnaeus",
+      "the American ecologist Rachel Carson"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q15_2",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "",
+    "stem": "Most scientific investigations begin with a set of facts about nature. These facts are obtained by",
+    "choices": [
+      "observation and description.",
+      "development of mathematical models.",
+      "development of hypotheses.",
+      "experimental testing of hypotheses."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q15_3",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "",
+    "stem": "The formulation of hypotheses is a critical step in the scientific process. In the simplest terms, what is a hypothesis?",
+    "choices": [
+      "an explanation",
+      "an experiment",
+      "an observation",
+      "a proven fact"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
     "id": "q16",
     "unit": "Unit 1: Introduction to Ecology",
     "source_question_no": "16",
@@ -794,6 +886,56 @@
       3
     ],
     "answer_letters": "D"
+  },
+  {
+    "id": "q17",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "17",
+    "stem": "Because it is difficult to experiment on large ecological systems, researchers often replicate the essential features of a system in smaller, simplified laboratory or field settings known as",
+    "choices": [
+      "microcosms",
+      "approximate systems.",
+      "natural treatments",
+      "experimental units."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q19",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "1",
+    "stem": "Where is most of the Earth's fresh water stored?",
+    "choices": [
+      "In lakes",
+      "In the polar ice caps",
+      "In oceans",
+      "In wetlands",
+      "Stored as groundwater"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q20",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "2",
+    "stem": "El Niño can cause changes in:",
+    "choices": [
+      "Phytoplankton production",
+      "Rainfall",
+      "Nutrient cycling",
+      "Flooding intensity",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
   },
   {
     "id": "q21",
@@ -830,6 +972,40 @@
     "answer_letters": "E"
   },
   {
+    "id": "q23",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "5",
+    "stem": "What is needed to convert atmospheric oxygen into ozone?",
+    "choices": [
+      "Temperature",
+      "Water",
+      "Carbon dioxide",
+      "Ultraviolet radiation",
+      "Light"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q24",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "6",
+    "stem": "Which of the following is NOT a greenhouse gas?",
+    "choices": [
+      "Water vapor",
+      "Nitrous oxide",
+      "Carbon dioxide",
+      "Methane",
+      "Oxygen"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
     "id": "q25",
     "unit": "Unit 2: The Physical Environment",
     "source_question_no": "7",
@@ -847,6 +1023,57 @@
     "answer_letters": "E"
   },
   {
+    "id": "q26",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "8",
+    "stem": "Which of the following is NOT a result or example of extreme weather?",
+    "choices": [
+      "Tsunamis",
+      "Tornadoes",
+      "Typhoons",
+      "Hurricanes",
+      "Earthquakes"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q26_2",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "9",
+    "stem": "Without the greenhouse effect, the Earth would be:",
+    "choices": [
+      "Colder",
+      "Lifeless",
+      "Warmer",
+      "Inhabitable because of toxic gases in the atmosphere.",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q27",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "10",
+    "stem": "Biomes are classifications based on what?",
+    "choices": [
+      "Vegetation present",
+      "Latitude",
+      "Precipitation",
+      "Temperature",
+      "Animals present"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
     "id": "q28",
     "unit": "Unit 2: The Physical Environment",
     "source_question_no": "11",
@@ -857,6 +1084,74 @@
       "Layer of a lake where temperature changes readily",
       "Layer of ocean water that changes density readily",
       "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q29",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "12",
+    "stem": "What factors can cause microclimates?",
+    "choices": [
+      "Mountains",
+      "Latitude",
+      "Cities",
+      "Vegetation",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q30",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "13",
+    "stem": "Where does evaporation exceed precipitation?",
+    "choices": [
+      "A tropical rain forest",
+      "A lake",
+      "A tundra",
+      "A grassland",
+      "A desert"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q31",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "14",
+    "stem": "What factors are important in maintaining grasslands?",
+    "choices": [
+      "Fire",
+      "Herbivory",
+      "Periodic drought",
+      "Agriculture",
+      "A, B and C"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q32",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "15",
+    "stem": "In which biome would decomposition be the fastest?",
+    "choices": [
+      "Boreal forests",
+      "Chaparral",
+      "Deciduous forest",
+      "Arctic tundra",
+      "Tropical rain forest"
     ],
     "answer_indices": [
       4
@@ -879,6 +1174,57 @@
       0
     ],
     "answer_letters": "A"
+  },
+  {
+    "id": "q34",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "17",
+    "stem": "What is responsible for seasons in the Northern and Southern hemispheres?",
+    "choices": [
+      "The spin of the Earth on its axis",
+      "Temperature",
+      "Coriolis effect",
+      "The rotation of the Earth around the sun",
+      "Tilt of the Earth"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q34_2",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "18",
+    "stem": "'Abiotic' means what?",
+    "choices": [
+      "Living organisms",
+      "Chemical factors",
+      "Environment",
+      "Not living",
+      "Physical influences"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q36",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "1",
+    "stem": "Which of the following could lead to a decrease in genetic diversity within a population?",
+    "choices": [
+      "Non-random mating",
+      "Genetic drift",
+      "Gene flow",
+      "A and B only",
+      "A, B and C"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
   },
   {
     "id": "q37",
@@ -1406,6 +1752,40 @@
       2
     ],
     "answer_letters": "C"
+  },
+  {
+    "id": "q70",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "8",
+    "stem": "Which of the following examples is NOT a behavioral defense against predators?",
+    "choices": [
+      "A green grasshopper that remains motionless in tall grass",
+      "The alarm call of Belding's ground squirrels when a hawk flies overhead",
+      "The \"diving\" reaction of a moth in flight when it detects a bat",
+      "A chuckwalla that \"inflates\" itself so it can wedge its body in a rock crevice",
+      "All of these are examples of behavioral defenses"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q70_2",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "9",
+    "stem": "A circadian rhythm:",
+    "choices": [
+      "is entrained by abiotic factors, such as temperature and light",
+      "has a period of exactly 24 hours",
+      "cannot be altered",
+      "is characteristic of only some organisms",
+      "All of these statements are true of a circadian rhythm."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
   },
   {
     "id": "q71",
@@ -2003,6 +2383,120 @@
     "answer_letters": "C"
   },
   {
+    "id": "q108",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "20",
+    "stem": "Which of the following statements describes a population that could experience exponential growth?",
+    "choices": [
+      "a population that was limited by density-dependent factors",
+      "a population whose size is beyond the carrying capacity of the environment",
+      "a population in which there are no limiting factors",
+      "a K-selected population"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q109",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "21",
+    "stem": "Which interaction is characterized by negative effects for both species?",
+    "choices": [
+      "predation",
+      "herbivory",
+      "commensalism",
+      "competition"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q109_2",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "22",
+    "stem": "The relationship between a burdock plant and a fox is",
+    "choices": [
+      "competition.",
+      "herbivory.",
+      "predation.",
+      "parasitism.",
+      "commensalism"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q109_3",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "23",
+    "stem": "The range of biotic and abiotic conditions a species can tolerate is its",
+    "choices": [
+      "community",
+      "habitat",
+      "niche",
+      "ecosystem role"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q110",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "24",
+    "stem": "An ecologist who studies populations would most likely be interested in",
+    "choices": [
+      "adaptations that help individual organisms live in their environment.",
+      "births and deaths of individuals belonging to a particular species in a particular place.",
+      "the number and relative abundances of species living in a particular place",
+      "physical and chemical transformations of energy and materials in the soil, atmosphere, and water.",
+      "transport of energy and materials at the global scale."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q110_2",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "25",
+    "stem": "An ecologist who takes a population approach to her research might study",
+    "choices": [
+      "the flux of phosphorus in a coastal wetland.",
+      "the adaptations of dolphins which make them successful aquatic predators.",
+      "the factors affecting the coexistence of the diverse grazing animals in the Serengeti of eastern Africa.",
+      "the variation in sex ratios, which affects birth rates, between mainland and island groups of red-headed woodpeckers."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q111",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "26",
+    "stem": "Which of the following is true regarding r-selected species?",
+    "choices": [
+      "Tend to be larger organisms",
+      "Tend to mature late",
+      "Tend to be strong competitors",
+      "Tend to display a high per capita rate of increase."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
     "id": "q112",
     "unit": "Unit 7: Population Interactions",
     "source_question_no": "27",
@@ -2017,6 +2511,119 @@
       0
     ],
     "answer_letters": "A"
+  },
+  {
+    "id": "q113",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "28",
+    "stem": "Density-dependent regulatory factors stabilize a population near its",
+    "choices": [
+      "Carrying capacity",
+      "Niche",
+      "Climax",
+      "Habitat"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q114",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "29",
+    "stem": "Which is NOT an adaptation to low-oxygen aquatic environments?",
+    "choices": [
+      "increased hemoglobin",
+      "breathing air",
+      "increased metabolic activity",
+      "symbiotic relationship with algae"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q114_2",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "30",
+    "stem": "In which location would you expect to find the highest levels of dissolved oxygen?",
+    "choices": [
+      "deep ocean water",
+      "a freshwater bog",
+      "a landlocked lake",
+      "a fast, shallow river"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q114_3",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "31",
+    "stem": "Why is it surprising that some organisms are able to live at temperatures above 75°C?",
+    "choices": [
+      "High temperatures decrease the efficiency of glycoproteins.",
+      "High temperatures denature proteins.",
+      "High temperatures evaporate water in cells.",
+      "High temperatures increase the permeability of cell membranes."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q114_4",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "32",
+    "stem": "What enable thermophilic bacteria to withstand very high temperatures?",
+    "choices": [
+      "high glycerol concentrations that protect cell membranes",
+      "low concentrations of isozymes that change form at high temperatures",
+      "cell materials that reduce heat transfer",
+      "high proportions of particular amino acids that form strong bonds"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q115",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "33",
+    "stem": "Wildlife management introduces 135 ducks to a reservoir in an effort to restore the duck population in the area. The growth rate of the population (rm) is 0.074 ducks/year.",
+    "choices": [
+      "Which of the following is the best estimate of the size of this duck population after one year?",
+      "135",
+      "141",
+      "145",
+      "152"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q116",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "34",
+    "stem": "When competing individuals do not directly interact with one another, but rather respond to the level of resource availability that is depressed by the consumption by other individuals in the population, this form of competition is called",
+    "choices": [
+      "Scramble competition",
+      "Contest competition",
+      "Exploitation competition",
+      "Interference competition."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
   },
   {
     "id": "q118",
@@ -2352,6 +2959,38 @@
       "Intraspecific competition",
       "Interspecific competition",
       "Formation of environmental gradients"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q138",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "21",
+    "stem": "If you wanted to understand the impact of an introduced species on existing species in an area, what ecological level should you examine?",
+    "choices": [
+      "population",
+      "individual",
+      "community",
+      "biosphere"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q139",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "22",
+    "stem": "The boundaries of communities are",
+    "choices": [
+      "difficult for species to cross",
+      "flexible",
+      "clear and distinct",
+      "never overlapping"
     ],
     "answer_indices": [
       1
@@ -2699,6 +3338,314 @@
     "answer_letters": "D"
   },
   {
+    "id": "q161",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "21",
+    "stem": "A bird that eats plant-eating insects occupies what trophic level?",
+    "choices": [
+      "1st",
+      "2nd",
+      "3rd",
+      "4th"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q162",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "22",
+    "stem": "Warmer and drier parts of the temperate seasonal forest biome are dominated by",
+    "choices": [
+      "rain forests.",
+      "deciduous forests.",
+      "needle-leaved forests.",
+      "grasslands",
+      "woodlands."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q163",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "23",
+    "stem": "The Mediterranean woodland/shrubland biome is characterized by thick evergreen shrubby vegetation. The small, drought-resistant leaves of these plants are said to be",
+    "choices": [
+      "sclerophyllous.",
+      "epiphytic.",
+      "limnetic.",
+      "emergent."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q164",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "24",
+    "stem": "Which biome occurs at the highest altitude?",
+    "choices": [
+      "boreal forest",
+      "temperate rainforest",
+      "woodland/shrubland",
+      "tundra"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q165",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "25",
+    "stem": "Which biome is home to the redwood (Sequoia sempervirens)?",
+    "choices": [
+      "temperate seasonal forest",
+      "temperate rainforest",
+      "boreal forest",
+      "tropical rainforest",
+      "tropical seasonal forest"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q166",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "26",
+    "stem": "Which biome has the highest biodiversity?",
+    "choices": [
+      "temperate rainforest",
+      "temperate seasonal forest",
+      "tropical rainforest",
+      "tropical seasonal forest"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q167",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "27",
+    "stem": "Overgrazing has caused significant changes in vegetation in",
+    "choices": [
+      "boreal forest.",
+      "temperate grasslands.",
+      "tropical seasonal forest/savannah.",
+      "woodlands/shrublands."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q168",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "28",
+    "stem": "Which biome has distinct wet and dry seasons?",
+    "choices": [
+      "tropical seasonal forest/savannah",
+      "boreal forest",
+      "temperate grasslands",
+      "tropical rainforest",
+      "tundra"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q169",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "29",
+    "stem": "Which of the following helps to prevent tree growth in tallgrass prairies?",
+    "choices": [
+      "low precipitation",
+      "high temperatures",
+      "frequent fires",
+      "human land use",
+      "acidic soils"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q170",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "30",
+    "stem": "Which of the following is another name for boreal forest?",
+    "choices": [
+      "matorral",
+      "pampas",
+      "steppes",
+      "taiga"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q171",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "31",
+    "stem": "In which biome is plant growth primarily constrained by precipitation?",
+    "choices": [
+      "boreal forest",
+      "temperate seasonal forest",
+      "temperate grassland",
+      "tundra"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q172",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "32",
+    "stem": "Which biome has soil that degrades quickly once converted to agricultural use?",
+    "choices": [
+      "temperate seasonal forest",
+      "tropical rainforest",
+      "tropical seasonal forest/savannah",
+      "woodland/shrubland"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q173",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "33",
+    "stem": "Succulent plants are a defining feature of",
+    "choices": [
+      "temperate seasonal forest.",
+      "temperate rainforest.",
+      "subtropical desert.",
+      "woodland/shrubland"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q174",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "34",
+    "stem": "Savannah gradually changes to tropical seasonal forest as",
+    "choices": [
+      "temperature increases.",
+      "temperature decreases.",
+      "precipitation increases.",
+      "precipitation decreases."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q175",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "35",
+    "stem": "Which biome has the most standing biomass per unit of area?",
+    "choices": [
+      "temperate seasonal forest",
+      "tropical seasonal forest",
+      "temperate rainforest",
+      "tropical rainforest"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q176",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "36",
+    "stem": "What factors increase a species “vulnerability” to extinction?",
+    "choices": [
+      "Small local population",
+      "Narrow habitat range (habitat specialist)",
+      "Small geographic range",
+      "All of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q177",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "37",
+    "stem": "Based on Island Biogeography, smaller islands have fewer species because",
+    "choices": [
+      "Lower rate of colonization",
+      "Higher rate of extinction",
+      "A smaller species pool to draw from",
+      "lower carrying capacity"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q178",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "38",
+    "stem": "What do you call the interactions of all living organisms with the non-living factors in a given area?",
+    "choices": [
+      "Photosynthesis",
+      "An environment",
+      "Abiotic factors",
+      "An ecosystem"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q179",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "39",
+    "stem": "Which of the following is not a part of carbon equilibrium in water?",
+    "choices": [
+      "bicarbonate",
+      "ammonia",
+      "hydrogen ions",
+      "carbonic acid"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
     "id": "q180",
     "unit": "Unit 9: Ecosystems",
     "source_question_no": "40",
@@ -2715,6 +3662,23 @@
     "answer_letters": "A"
   },
   {
+    "id": "q181",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "41",
+    "stem": "How does the concentration of bicarbonate in water compare to the concentration of carbon dioxide in the air?",
+    "choices": [
+      "one tenth",
+      "about the same",
+      "twice as much",
+      "about 30 times more",
+      "over 100 times more"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
     "id": "q182",
     "unit": "Unit 9: Ecosystems",
     "source_question_no": "42",
@@ -2729,6 +3693,118 @@
       2
     ],
     "answer_letters": "C"
+  },
+  {
+    "id": "q183",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "43",
+    "stem": "Which does NOT limit the ability of aquatic plants to photosynthesize?",
+    "choices": [
+      "slow diffusion of carbon dioxide in water",
+      "boundary layers",
+      "the size of bicarbonate molecules",
+      "high levels of carbonic acid"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q184",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "44",
+    "stem": "Hyphae are structures found in",
+    "choices": [
+      "plants.",
+      "animals.",
+      "fungi.",
+      "protists"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q185",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "45",
+    "stem": "Which level of ecological hierarchy includes the movement of water and air?",
+    "choices": [
+      "community",
+      "population",
+      "ecosystem",
+      "biosphere"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q186",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "46",
+    "stem": "Which of the following systems is composed of assemblages of organisms together with their physical and chemical environments?",
+    "choices": [
+      "organism",
+      "population",
+      "community",
+      "ecosystem"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q187",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "47",
+    "stem": "Ecologists using global carbon-balance models were overestimating the rate of increase of atmospheric carbon dioxide. This discovery led these ecologists to",
+    "choices": [
+      "discard their models.",
+      "switch to modeling other phenomena problem.",
+      "conclude that increase in atmospheric carbon dioxide is not a serious environmental",
+      "search for evidence of other carbon dioxide sinks in the global cycle of carbon."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q188",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "48",
+    "stem": "Which of the following has NOT caused increased habitat destruction?",
+    "choices": [
+      "biofuel use",
+      "the pet trade",
+      "growing populations",
+      "cactus harvesting"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q189",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "49",
+    "stem": "Which term describes the presence of unique species found nowhere else?",
+    "choices": [
+      "Extinction",
+      "Biodiversity",
+      "Polyploidy",
+      "Endemism"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
   },
   {
     "id": "q191",
@@ -3069,6 +4145,22 @@
       4
     ],
     "answer_letters": "E"
+  },
+  {
+    "id": "q211",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "21",
+    "stem": "The rate of biological processes increases two to four times for each increase in temperature",
+    "choices": [
+      "12°C",
+      "10°C",
+      "8°C",
+      "5°C"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
   }
 ]
   </script>
@@ -3220,9 +4312,11 @@
       modePracticeButton.setAttribute("aria-pressed", String(practice));
       modeMistakesButton.classList.toggle("is-active", !practice);
       modeMistakesButton.setAttribute("aria-pressed", String(!practice));
-      document.getElementById("new-quiz").innerHTML = practice
+      const newQuizLabel = practice
         ? `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组`
         : `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>刷新错题`;
+      document.getElementById("new-quiz").innerHTML = newQuizLabel;
+      document.getElementById("bottom-new-quiz").innerHTML = newQuizLabel;
     }
 
     function renderScore() {
@@ -3424,6 +4518,9 @@
     document.getElementById("new-quiz").addEventListener("click", startQuiz);
     document.getElementById("submit-quiz").addEventListener("click", submitQuiz);
     document.getElementById("reset-answers").addEventListener("click", resetAnswers);
+    document.getElementById("bottom-new-quiz").addEventListener("click", startQuiz);
+    document.getElementById("bottom-submit-quiz").addEventListener("click", submitQuiz);
+    document.getElementById("bottom-reset-answers").addEventListener("click", resetAnswers);
     modePracticeButton.addEventListener("click", startPracticeQuiz);
     modeMistakesButton.addEventListener("click", startMistakeQuiz);
     clearMistakesButton.addEventListener("click", clearMistakeBook);
