@@ -1,0 +1,3213 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>森林生态学刷题</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #f5f7f1;
+      --surface: #ffffff;
+      --surface-2: #eef4ef;
+      --ink: #1f2b27;
+      --muted: #5d6964;
+      --line: #d7ded6;
+      --green: #2f7d5c;
+      --teal: #197681;
+      --amber: #c87926;
+      --red: #b6494b;
+      --shadow: 0 16px 42px rgba(28, 42, 36, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      gap: 28px;
+      align-items: stretch;
+      min-height: 220px;
+      padding: 20px 0 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(2rem, 4vw, 4.2rem);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      overflow-wrap: anywhere;
+    }
+
+    .forest-panel {
+      min-height: 210px;
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #dfeadf;
+      box-shadow: var(--shadow);
+    }
+
+    .forest-panel svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      background: rgba(245, 247, 241, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar-actions,
+    .review-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
+    }
+
+    .button svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(31, 43, 39, 0.16);
+    }
+
+    .button.secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .button.submit {
+      background: var(--green);
+    }
+
+    .button:focus-visible,
+    .choice input:focus-visible + span,
+    select:focus-visible {
+      outline: 3px solid rgba(25, 118, 129, 0.28);
+      outline-offset: 3px;
+    }
+
+    .counter {
+      display: grid;
+      gap: 2px;
+      min-width: 160px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .counter strong {
+      color: var(--ink);
+      font-size: 1.1rem;
+    }
+
+    select {
+      min-height: 40px;
+      padding: 0 34px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .score-panel {
+      display: none;
+      margin: 22px 0 4px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--green);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .score-panel.is-visible {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .score-main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .score-value {
+      font-size: 2.3rem;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .score-note {
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .quiz-form {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .question-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 10px 28px rgba(28, 42, 36, 0.07);
+      overflow: hidden;
+    }
+
+    .question-card.is-correct {
+      border-left: 5px solid var(--green);
+    }
+
+    .question-card.is-wrong,
+    .question-card.is-unanswered {
+      border-left: 5px solid var(--red);
+    }
+
+    .question-head {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 12px;
+      padding: 18px 18px 10px;
+      align-items: start;
+    }
+
+    .question-no {
+      display: inline-grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--surface-2);
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .question-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .question-title {
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 760;
+      overflow-wrap: anywhere;
+    }
+
+    .choices {
+      display: grid;
+      gap: 8px;
+      padding: 8px 18px 18px 74px;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 120ms ease, border-color 120ms ease;
+    }
+
+    .choice:hover {
+      background: #f4f8f6;
+      border-color: var(--line);
+    }
+
+    .choice input {
+      width: 18px;
+      height: 18px;
+      margin: 2px 0 0;
+      accent-color: var(--green);
+    }
+
+    .choice-letter {
+      font-weight: 800;
+      color: var(--teal);
+      margin-right: 6px;
+    }
+
+    .choice span,
+    .answer-line {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .choice.is-selected {
+      background: #edf7f1;
+      border-color: rgba(47, 125, 92, 0.35);
+    }
+
+    .choice.is-answer {
+      background: #eaf6ed;
+      border-color: rgba(47, 125, 92, 0.55);
+    }
+
+    .choice.is-missed,
+    .choice.is-picked-wrong {
+      background: #fff0ef;
+      border-color: rgba(182, 73, 75, 0.42);
+    }
+
+    .answer-line {
+      display: none;
+      margin: 0 18px 18px 74px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fbf4e8;
+      color: #6a421d;
+      font-size: 0.92rem;
+    }
+
+    .question-card.is-reviewed .answer-line {
+      display: block;
+    }
+
+    .empty-state {
+      padding: 30px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 840px) {
+      .page {
+        width: min(100% - 20px, 720px);
+        padding-top: 12px;
+      }
+
+      .masthead {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        min-height: auto;
+      }
+
+      .forest-panel {
+        min-height: 150px;
+      }
+
+      .toolbar {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .counter {
+        min-width: 0;
+      }
+
+      .score-panel.is-visible {
+        grid-template-columns: 1fr;
+      }
+
+      .question-head {
+        grid-template-columns: 36px minmax(0, 1fr);
+        padding: 16px 14px 8px;
+      }
+
+      .question-no {
+        width: 32px;
+        height: 32px;
+      }
+
+      .choices {
+        padding: 8px 14px 16px 14px;
+      }
+
+      .answer-line {
+        margin: 0 14px 16px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <section class="title-block" aria-labelledby="page-title">
+        <div class="eyebrow">Forest Ecology Question Bank</div>
+        <h1 id="page-title">森林生态学刷题</h1>
+        <p class="lead">每轮随机抽 20 道选择题。答完提交后会即时判分，并把错题和正确答案留在页面里，适合一轮一轮刷。</p>
+      </section>
+      <figure class="forest-panel" aria-label="森林样方与树冠示意图">
+        <svg viewBox="0 0 760 420" role="img" aria-labelledby="forest-title forest-desc">
+          <title id="forest-title">森林生态学刷题视觉图</title>
+          <desc id="forest-desc">山坡、树冠、样方标记和观察路线组成的森林生态学示意图。</desc>
+          <rect width="760" height="420" fill="#dfeadf"/>
+          <path d="M0 278 C116 222 188 244 266 205 C380 148 481 168 577 128 C646 100 700 104 760 80 V420 H0Z" fill="#b9d3bf"/>
+          <path d="M0 330 C102 285 190 298 270 264 C374 220 487 230 586 186 C655 155 704 150 760 126 V420 H0Z" fill="#7fb18b"/>
+          <path d="M0 374 C132 330 235 345 346 313 C445 284 548 288 641 252 C692 232 730 230 760 214 V420 H0Z" fill="#3f8668"/>
+          <g opacity="0.92">
+            <path d="M108 302v-88" stroke="#3e5f48" stroke-width="10" stroke-linecap="round"/>
+            <path d="M108 190 62 276h92Z" fill="#285f4b"/>
+            <path d="M108 142 50 244h116Z" fill="#31705a"/>
+            <path d="M108 108 66 188h84Z" fill="#3b8065"/>
+            <path d="M246 284v-110" stroke="#3e5f48" stroke-width="12" stroke-linecap="round"/>
+            <path d="M246 148 186 264h120Z" fill="#26624e"/>
+            <path d="M246 104 172 226h148Z" fill="#34775f"/>
+            <path d="M246 70 194 170h104Z" fill="#438869"/>
+            <path d="M614 242v-96" stroke="#3e5f48" stroke-width="11" stroke-linecap="round"/>
+            <path d="M614 120 558 224h112Z" fill="#255d49"/>
+            <path d="M614 82 548 186h132Z" fill="#35775f"/>
+          </g>
+          <g fill="none" stroke="#f8f3dd" stroke-width="5" stroke-linecap="round" opacity="0.9">
+            <path d="M124 362 C202 326 271 345 346 316 C420 287 499 287 580 248"/>
+            <path d="M404 300h80v54h-80z"/>
+            <path d="M432 300v54 M404 327h80"/>
+          </g>
+          <circle cx="584" cy="246" r="9" fill="#c87926"/>
+          <circle cx="124" cy="362" r="9" fill="#c87926"/>
+        </svg>
+      </figure>
+    </header>
+
+    <nav class="toolbar" aria-label="刷题控制">
+      <div class="toolbar-actions">
+        <button class="button secondary" id="new-quiz" type="button" title="重新随机抽 20 题"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组</button>
+        <button class="button submit" id="submit-quiz" type="button" title="提交并判分"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>提交判分</button>
+        <button class="button secondary" id="reset-answers" type="button" title="清空当前选择"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 21-4-4L14 6l4 4L7 21Z"/><path d="M11 17h10"/><path d="m14 6 3-3 4 4-3 3"/></svg>清空选择</button>
+      </div>
+      <div class="review-tools">
+        <label class="sr-only" for="review-filter">查看范围</label>
+        <select id="review-filter" aria-label="查看范围">
+          <option value="all">显示全部题目</option>
+          <option value="wrong">只看错题</option>
+          <option value="unanswered">只看未答题</option>
+        </select>
+        <div class="counter" aria-live="polite">
+          <span><strong id="answered-count">0/20</strong> 已作答</span>
+          <span id="bank-count">146 道可判分题</span>
+        </div>
+      </div>
+    </nav>
+
+    <section class="score-panel" id="score-panel" aria-live="polite"></section>
+    <form class="quiz-form" id="quiz-form"></form>
+    <div class="sr-only" id="live-status" aria-live="polite"></div>
+  </main>
+
+  <script id="question-bank" type="application/json">
+[
+  {
+    "id": "q3",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "1",
+    "stem": "What is ecology?",
+    "choices": [
+      "Ecology is the study of interactions between organisms and their physical and biological environments.",
+      "Ecology is the study of the environment.",
+      "Ecology is the same as natural history studies.",
+      "Ecology is the study of organisms.",
+      "Ecology is another term for environmentalism."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q4",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "2",
+    "stem": "Plant Ecology started from what other field?",
+    "choices": [
+      "Oceanography",
+      "Economics",
+      "Animal behavior",
+      "Plant geography",
+      "Genetics"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q5",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "3",
+    "stem": "Ecology is derived from the Greek word 'oikos' which means what?",
+    "choices": [
+      "Nature",
+      "Environment",
+      "Home",
+      "Plant",
+      "Organism"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q6",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "4",
+    "stem": "What role does facilitation play in succession theory?",
+    "choices": [
+      "The process where one species modifies the environment so that it is less habitable for other species",
+      "The process by which random individuals colonize an area and then compete for dominance",
+      "An interaction within or between species in which one benefits and the other is harmed",
+      "Any assemblage of living organisms in a defined area",
+      "The process where one species modifies the environment, allowing other species to invade"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q7",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "5",
+    "stem": "What is a population?",
+    "choices": [
+      "A population is the area in which organisms live.",
+      "A population is a group of organisms (all of the same species) that occupy the same area.",
+      "A population is a group of organisms that resemble one another closely.",
+      "A population refers to groups of different species found living together in an environment.",
+      "A population is a group of genetically similar organisms that exist at the same time but in different places."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q8",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "6",
+    "stem": "Ecosystem ecologists focus on what?",
+    "choices": [
+      "Flow of energy",
+      "Cycling of nutrients",
+      "Genetic variation",
+      "Species interactions",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q9",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "7",
+    "stem": "Which of the following best represents a community?",
+    "choices": [
+      "Sequence of pools and riffles in a stream",
+      "Rainbow and brown trout, aquatic insects, and algae living in a reach of a stream",
+      "One species of rainbow trout in a stream",
+      "A woodland stream, its inhabitants, its inputs and outputs",
+      "A fly fisherman with his trophy fish"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q10",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "8",
+    "stem": "If you study the effect of habitat complexity on the competitive interactions between two fish species, you would be best termed what type of ecologist?",
+    "choices": [
+      "Community ecologist",
+      "Ecosystem ecologist",
+      "Evolutionary ecologist",
+      "Population ecologist",
+      "Physiological ecologist"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q11",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "9",
+    "stem": "Why do policy-makers often misunderstand ecology?",
+    "choices": [
+      "A lack of interdisciplinary efforts exists to disseminate information.",
+      "Policy-makers confuse ecology with environmentalism.",
+      "Policy makers understand of basic ecological tenets.",
+      "Few governmental and environmental organizations exist to respond to ecological problems.",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q13",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "11",
+    "stem": "What fields fall under the classification of applied ecology?",
+    "choices": [
+      "Restoration ecology",
+      "Landscape ecology",
+      "Theoretical ecology",
+      "Both A and B",
+      "Both B and C"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q14",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "12",
+    "stem": "Which statement is FALSE about ecology?",
+    "choices": [
+      "Ecology is not the same as environmentalism.",
+      "Ecology means the study of living things.",
+      "Ecology began with natural history and observational studies, but now is focused on experimental research and theoretical models.",
+      "Ecology has many branches.",
+      "Ecology is a relatively new science."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q16",
+    "unit": "Unit 1: Introduction to Ecology",
+    "source_question_no": "16",
+    "stem": "Which is the correct hierarchy of ecological systems, starting at the most general?",
+    "choices": [
+      "ecosystem, biosphere, community, population, individual",
+      "individual, community, population, ecosystem, biosphere",
+      "individual, population, ecosystem, biosphere, community",
+      "individual, population, community, ecosystem, biosphere",
+      "biosphere, community, ecosystem, population, individual"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q21",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "3",
+    "stem": "What is the greenhouse effect?",
+    "choices": [
+      "Growing vegetables inside",
+      "Warming of the surface waters of the ocean",
+      "Process of reflecting solar radiation",
+      "Releasing carbon dioxide into the atmosphere",
+      "Natural process of trapping heat in the troposphere"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q22",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "4",
+    "stem": "How does climate differ from weather?",
+    "choices": [
+      "Climate is less predictable than weather.",
+      "There is no difference; climate and weather are synonyms.",
+      "Climate, unlike weather, does not include extreme events, such as hurricanes.",
+      "Climate only considers temperature and rainfall, while weather includes barometric pressure.",
+      "They are on different time scales; weather involves short-term changes in precipitation, temperature or barometric pressure, while climate is the average long-term weather in a particular area."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q25",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "7",
+    "stem": "What happens as a cold front passes through a warm front?",
+    "choices": [
+      "The air from the warm front rises.",
+      "Thunderstorms often occur.",
+      "Clear skies follow.",
+      "The air from the cold front sinks toward the ground.",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q28",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "11",
+    "stem": "What does an ecocline describe?",
+    "choices": [
+      "A geographical gradient of communities created by responses of vegetation to environmental change",
+      "Place where two biomes meet",
+      "Layer of a lake where temperature changes readily",
+      "Layer of ocean water that changes density readily",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q33",
+    "unit": "Unit 2: The Physical Environment",
+    "source_question_no": "16",
+    "stem": "Why should conservation efforts make mountain areas a priority?",
+    "choices": [
+      "Mountain ecosystems take a long time to recuperate from disturbance.",
+      "Mountain ecosystems contain the majority of the world's forests.",
+      "Mountain areas often contain high biodiversity.",
+      "Ice and snow of mountains help regulate climate and water cycling.",
+      "All of the above"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q37",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "2",
+    "stem": "Sickle-cell anemia is a disease caused by a recessive allele that produces an altered form of hemoglobin, reducing oxygen-carrying capacity of the blood. Individuals that are homozygous for the sickle-cell trait rarely live to reproductive age. However, individuals that are heterozygotes (one allele for normal hemoglobin and one allele for sickle-cell, with normal oxygen-carrying capacity of the blood) are more likely to survive an infection of the malaria parasite than individuals that are homozygous for normal hemoglobin. In evolutionary terms, this example illustrates that:",
+    "choices": [
+      "The sickle-cell allele is passed from parent to offspring more often than the normal allele.",
+      "There hasn't been enough time for selection to \"weed out\" the sickle-cell allele.",
+      "What we now consider to be a harmful allele may have had a selective advantage under a different set of environmental conditions.",
+      "Recessive alleles are always more harmful than dominant alleles.",
+      "Heterozygotes always have a selective advantage regardless of environment."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q38",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "3",
+    "stem": "Which of the following is/are required for natural selection to occur?",
+    "choices": [
+      "At least some characteristics must vary between individuals in the population.",
+      "Variation in characteristics must be heritable (passed from parent to offspring).",
+      "There must be differential reproduction among individuals with different characteristics.",
+      "Individuals must vary in their ability to survive in a particular habitat or environment.",
+      "All of the above are required."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q39",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "4",
+    "stem": "In evolutionary terms, fitness refers to:",
+    "choices": [
+      "How well adapted an individual is to its habitat",
+      "How well an individual can outcompete others for resources",
+      "How many genes an individual leaves in the next generation",
+      "How healthy an individual is",
+      "How many mates an individual has"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q40",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "5",
+    "stem": "Which of the following is TRUE of the Hardy-Weinberg model?",
+    "choices": [
+      "If a population follows all of the model's assumptions, then evolution is occurring in that population.",
+      "Natural selection can cause large changes in allele frequencies in only a few generations.",
+      "Migration of individuals in or out of a population has no effect on allele frequencies.",
+      "Non-random mating has no effect on allele frequencies.",
+      "Normal rates of mutation cause large changes in allele frequencies in only a few generations."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q41",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "6",
+    "stem": "Genetic drift is most likely to occur in what kind of population?",
+    "choices": [
+      "A large population",
+      "A population where heterozygotes dominate",
+      "It is equally likely to occur in all of these kinds of populations",
+      "A population with a large number of rare alleles",
+      "A small population"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q42",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "7",
+    "stem": "Most male cheetahs are sterile, a condition resulting from accumulation of harmful alleles caused by a sharp decrease in the cheetah population during the 19th century. Such a situation demonstrates:",
+    "choices": [
+      "Disruptive selection for sterile males",
+      "Directional selection for sterile males",
+      "Male cheetahs could not adapt to changing environments as well as female cheetahs",
+      "The bottleneck effect",
+      "All of these"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q43",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "8",
+    "stem": "Which statement is NOT true about natural selection?",
+    "choices": [
+      "Disruptive selection favors both of the extreme phenotypes over the intermediate phenotype.",
+      "Stabilizing selection favors an intermediate phenotype over either of the extreme phenotypes.",
+      "Disruptive selection leads to polymorphism, favoring different forms of the same species.",
+      "Directional selection leads to improved selection when the environment remains the same.",
+      "Directional selection occurs when one phenotype is favored over all others."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q44",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "9",
+    "stem": "A key requirement for allopatric speciation is:",
+    "choices": [
+      "Polyploidy",
+      "Differences in reproductive timing",
+      "Sexual selection",
+      "Geographic isolation",
+      "Formation of hybrids where ranges overlap"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q45",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "10",
+    "stem": "In Mayer's biological species concept, what aspect of a population is critical to determining whether its individuals are part of the same species?",
+    "choices": [
+      "Physical appearance",
+      "Similar behavior",
+      "Similar phenotypes",
+      "Ability to interbreed",
+      "Polyploidy"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q46",
+    "unit": "Unit 3: Evolution/Population Genetics",
+    "source_question_no": "11",
+    "stem": "Which of the following are possible advantages of sexual reproduction?",
+    "choices": [
+      "It allows for more potential success in unstable or fluctuating environments.",
+      "It enables rapid colonization of new habitats.",
+      "It enhances genetic uniformity.",
+      "It increases the number of genes an individual contributes to each offspring.",
+      "All of these are advantages of sexual reproduction."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q48",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "1",
+    "stem": "Homeotherms are organisms that can do what?",
+    "choices": [
+      "Maintain a relatively constant body temperature despite variations in the external environment.",
+      "Use metabolic activity to regulate their internal environment",
+      "Use the external environment to regulate their internal temperature",
+      "Spend the majority of their life in hibernation",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q49",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "2",
+    "stem": "Animals that live at high altitudes must be able to do what to survive?",
+    "choices": [
+      "Meet increased oxygen demands",
+      "Tolerate cold temperatures",
+      "Overcome the tendency to dehydrate",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q50",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "3",
+    "stem": "Desert animals tolerate extremely warm conditions by:",
+    "choices": [
+      "Appearing pale and thus absorbing less heat",
+      "Burrowing in the sand",
+      "Having short appendages that conserve heat",
+      "Avoiding activity at dawn and dusk",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q51",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "4",
+    "stem": "Which statement best describes an adaptation?",
+    "choices": [
+      "A trait that allows one organism to out-compete another",
+      "A random change in the structure of DNA in the cell",
+      "A trait that leads to differential reproduction",
+      "A heritable trait that allows an organism to better survive and reproduce under certain environmental conditions",
+      "The ability of an organism, relative to others, to leave viable offspring"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q52",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "5",
+    "stem": "In nutrient-limited environments, some plants, such as Northern pitcher plants (Sarracenia purpurea) and sundews (Drosera rotundifolia), use what means to sequester additional nutrients?",
+    "choices": [
+      "Carnivory",
+      "Mutual association with fungi",
+      "Photosynthesis",
+      "Production of more xylem",
+      "Nitrogen fixation"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q53",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "6",
+    "stem": "Plants evolve which of the following adaptations to deal with dry conditions?",
+    "choices": [
+      "Ability to reduce transpiration by closing stomata",
+      "Increased leaf thickness",
+      "Ability to store water in spongy tissue",
+      "Ability to extend roots deep into soil",
+      "All of the above"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q54",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "7",
+    "stem": "Plants that have mycorrhizae (fungi associated with the roots) are often better equipped to adapt to different soil environments. Why?",
+    "choices": [
+      "Mycorrhizae take up mineral nutrients for the plant in exchange for carbon.",
+      "Plants with mycorrhizae are often less susceptible to pathogens.",
+      "Plants with mycorrhizae are bigger and outcompete smaller plants.",
+      "Mycorrhizae transport water.",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q55",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "8",
+    "stem": "Cold-blooded organisms, or poikilotherms, can regulate their body temperature by:",
+    "choices": [
+      "Hiding in cool places",
+      "Basking in the sun",
+      "Panting",
+      "Going dormant",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q56",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "9",
+    "stem": "Which of the following adaptations would you expect to find in a prairie grass?",
+    "choices": [
+      "Ability to sprout quickly from seed banks",
+      "Thick seed coat",
+      "Deep root system",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q57",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "10",
+    "stem": "What evolutionary process drives adaptation?",
+    "choices": [
+      "Extinction",
+      "Geographic isolation",
+      "Mutation",
+      "Genetic drift",
+      "Natural selection"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q58",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "11",
+    "stem": "Which statement is FALSE about phenotypic plasticity?",
+    "choices": [
+      "Phenotypic plasticity is a trait that can evolve.",
+      "Phenotypic plasticity may or may not be adaptive.",
+      "Acclimation to temperature is a type of phenotypic plasticity.",
+      "Phenotypic plasticity is the genetic constitution of an organism.",
+      "Phenotypic plasticity is possible in morphological, behavioral and physiological traits."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q59",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "12",
+    "stem": "What mechanisms promote speciation?",
+    "choices": [
+      "Geographic Isolation",
+      "Reproductive isolation",
+      "Drastic changes in climate",
+      "Both A and B",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q60",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "13",
+    "stem": "During the Industrial Revolution, individual peppered moths that were dark survived better than those that were light. Why?",
+    "choices": [
+      "Dark moths were less susceptible to predation because they blended with the soot on trees.",
+      "As lichen died on trees, light-gray moths lost their food source.",
+      "Light moths could not withstand the effects of air pollution.",
+      "Dark moths were superior competitors for food.",
+      "Both A and C"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q61",
+    "unit": "Unit 4: Physiological Adaptations",
+    "source_question_no": "14",
+    "stem": "Stabilizing natural selection would be most likely to occur under which of these circumstances?",
+    "choices": [
+      "Population undergoing rapid mutation",
+      "Geographic and reproductive isolation",
+      "Environmental conditions that favor both extremes",
+      "Environmental conditions that often change and result in organisms at one extreme becoming the most common",
+      "Environment conditions that rarely change and organisms occurring in that population that are well adapted to the environment"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q63",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "1",
+    "stem": "Living in groups, such as the herds of bison that once inhabited the prairie, may evolve because of:",
+    "choices": [
+      "Greater ability to defend the young from predators.",
+      "Greater proximity of potential mates.",
+      "Greater spread of parasites.",
+      "A and B",
+      "A, B and C"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q64",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "2",
+    "stem": "Disadvantages of living in groups include:",
+    "choices": [
+      "More competition for food",
+      "Greater exposure to predators",
+      "More competition for mates",
+      "Greater spread of infectious disease",
+      "All of these statements are disadvantages of living in groups."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q65",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "3",
+    "stem": "An example of territoriality is:",
+    "choices": [
+      "A warbler singing to ward off other males and attract a female to nest in his hedgerow",
+      "Barnacles attached to a whale",
+      "A swarm of mosquitoes hovering around you on a hot summer evening",
+      "A group of moths swarming around a streetlight",
+      "All of the above are examples of territoriality"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q66",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "4",
+    "stem": "Poison arrow frogs of Central and South America have brightly colored skin patterns of blue, orange, yellow and red. This skin adornment is an example of what kind of defense against predation?",
+    "choices": [
+      "Mimicry",
+      "Camouflage",
+      "Warning coloration",
+      "Chemical defense",
+      "Mechanical defense"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q67",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "5",
+    "stem": "The 'dead-leaf' butterfly is aptly named. This is an example of what kind of defense against predation?",
+    "choices": [
+      "Mimicry",
+      "Mechanical defense",
+      "Warning coloration",
+      "Chemical defense",
+      "Camouflage"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q68",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "6",
+    "stem": "Bombardier beetles release an explosive mixture of quinones and hydrogen peroxide from glands at the end of their abdomen when disturbed by grasshopper mice and other predators. This is an example of what kind of defense against predation?",
+    "choices": [
+      "Chemical defense",
+      "Mechanical defense",
+      "Camouflage",
+      "Mimicry",
+      "Warning coloration"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q69",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "7",
+    "stem": "The viceroy butterfly (Limenitis archippus) resembles the queen butterfly (Danaus gilippus), a species toxic to birds because of alkaloids it stores during larval development from the milkweeds it feeds upon. The viceroy butterfly is an example of what kind of defense against predation?",
+    "choices": [
+      "Mechanical defenses",
+      "Camouflage",
+      "Mimicry",
+      "Chemical defenses",
+      "Behavioral"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q71",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "10",
+    "stem": "Assumption(s) of optimal foraging theory is/are:",
+    "choices": [
+      "Energy obtained by an organism is positively related to its fitness.",
+      "Foraging choices involve other nutrients besides energy needs alone.",
+      "An organism doesn't need to keep track of all food items encountered.",
+      "An organism doesn't always forage in an optimal manner.",
+      "None of these statements are assumptions of the theory."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q72",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "11",
+    "stem": "Which of the following is an ecological factor that promotes sexual selection for elaborate male traits, such as the tail feathers of a peacock?",
+    "choices": [
+      "Males provide most of the care of the young.",
+      "Males territories are equal in providing resources for females.",
+      "Females invest more in parental care of offspring than males do.",
+      "The population has fewer males than females.",
+      "Males do not engage in competition for females."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q73",
+    "unit": "Unit 5: Behavioral Ecology",
+    "source_question_no": "12",
+    "stem": "Monogamy, the mating system in which each sex has only one mate, is favored under what ecological conditions?",
+    "choices": [
+      "Females in the population are widely dispersed.",
+      "Food is widely dispersed.",
+      "The habitat is poor in needed resources, such as nesting sites.",
+      "The male cannot profitably defend more than one female.",
+      "All of these are conditions that would favor monogamy."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q75",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "1",
+    "stem": "A group of individuals living in the same area and belonging to the same species represent a(n):",
+    "choices": [
+      "Community",
+      "Guild",
+      "Ecosystem",
+      "Population",
+      "Biome"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q76",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "2",
+    "stem": "The number of individuals of a species per unit area of suitable habitat represents the:",
+    "choices": [
+      "Ecological density",
+      "Raw abundance",
+      "Degree of dispersion",
+      "Crude density",
+      "Total population size"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q77",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "3",
+    "stem": "Which type of distribution pattern is observed in populations of plants and animals on a large scale?",
+    "choices": [
+      "Regular distribution",
+      "Random distribution",
+      "Clumped distribution",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q78",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "4",
+    "stem": "Which of the following methods is the LEAST quantitative for estimating the size of a population?",
+    "choices": [
+      "Mark and recapture",
+      "Presence/absence",
+      "Quadrats",
+      "Direct count",
+      "All of these give equal amounts of quantitative information."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q79",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "5",
+    "stem": "The symbol \"R0\" in population studies represents the:",
+    "choices": [
+      "Individuals surviving to a particular age",
+      "Carrying capacity",
+      "Time an individual has left to live, on average",
+      "Population size",
+      "Net reproductive rate"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q80",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "6",
+    "stem": "Which of the following statements is TRUE regarding a life table?",
+    "choices": [
+      "It can only be constructed by following a group of individuals of the same age class from birth to death.",
+      "It can only be constructed by recording the age at death of a large number of individuals.",
+      "It can only be constructed by recording the age distribution of a population at a given time.",
+      "It cannot be applied to a population with overlapping generations.",
+      "It can be constructed by any of the methods in A, B and C."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q81",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "7",
+    "stem": "A country that has achieved zero population growth (ZPG) would have an age structure diagram that:",
+    "choices": [
+      "Looks like a pyramid",
+      "Has a large proportion of reproductive individuals",
+      "Has only post-reproductive individuals",
+      "Shows little variation in the proportion of each age group in the population.",
+      "Has a large proportion of pre-reproductive individuals"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q82",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "8",
+    "stem": "If the value of \"r\" for a population is negative, then that population:",
+    "choices": [
+      "is increasing",
+      "has birth rates that are greater than death rates.",
+      "has exceeded its carrying capacity",
+      "is declining",
+      "is approaching its carrying capacity"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q83",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "9",
+    "stem": "Which of the following models represents the growth of a local population?",
+    "choices": [
+      "births + deaths",
+      "(births + deaths) – (immigration + emigration)",
+      "(births + immigration) – (deaths + emigration)",
+      "births – deaths",
+      "(births + emigration) – (deaths + immigration)"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q84",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "10",
+    "stem": "In population ecology, the letter \"K\" represents what about a population?",
+    "choices": [
+      "Average age",
+      "Intrinsic rate of growth",
+      "Fertility rate",
+      "Maximum sustainable population size",
+      "Maximum rate of growth"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q85",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "11",
+    "stem": "Which of the following is an assumption of the exponential model for population growth?",
+    "choices": [
+      "An age structure that varies with each generation",
+      "Variable intrinsic rate of increase",
+      "Increasing birth rates and declining death rates",
+      "Unlimited resources",
+      "All of these are assumptions of the exponential model."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q86",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "12",
+    "stem": "A \"J-shaped\" curve is characteristic of a population that is:",
+    "choices": [
+      "Decreasing slowly",
+      "Increasing rapidly",
+      "Approaching zero growth",
+      "Decreasing rapidly",
+      "Increasing linearly"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q87",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "13",
+    "stem": "Ultimately, the carrying capacity of the environment for a species is determined by:",
+    "choices": [
+      "The rate at which diseases spread through the population",
+      "The rate of predation on the population",
+      "The intrinsic rate of increase for the organism",
+      "The sustainable supply of resources the environment can provide",
+      "The size of the population"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q88",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "14",
+    "stem": "Decide which of the following organisms is a \"K-strategist.\"",
+    "choices": [
+      "Mackerel (Scomber scombrus) produce 1-mm diameter eggs—up to several million eggs at one time. The eggs become part of the ocean's plankton and are not given further care by the female.",
+      "Foxtail (Alopecurus myosuroides) is an annual grass found in Europe and the U.S. In summer, a plant produces about 100 seeds and then dies.",
+      "The endangered California Condor (Gymnogyps californianus) is the largest bird in North America. It does not reach sexual maturity until 5 years of age. After choosing a life-long mate, it raises a single chick every other year.",
+      "Edible Cockle (Cardium edule) is an intertidal mollusk. Each female lays 10,000 to 20,000 eggs per year; most die after one year.",
+      "All of these are K-strategists."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q89",
+    "unit": "Unit 6: Population Ecology",
+    "source_question_no": "15",
+    "stem": "A density-dependent factor in population growth is one that _____ as ____ increases.",
+    "choices": [
+      "Remains the same, N",
+      "Increases, r",
+      "Increases, age of the population",
+      "Increases, K",
+      "Increases, N"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q91",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "1",
+    "stem": "A niche is:",
+    "choices": [
+      "Determined solely by abiotic factors in the environment",
+      "A territory occupied by a species",
+      "Determined by all the factors that affect a species",
+      "A species' carrying capacity",
+      "The ecosystem where a species is found"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q92",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "2",
+    "stem": "Intraspecific competition:",
+    "choices": [
+      "Is seen only in species of animals",
+      "Causes increased growth among fish populations in a pond",
+      "Is most intense at low population densities",
+      "Causes self-thinning among plants",
+      "Occurs only between different species"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q93",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "3",
+    "stem": "The fundamental niche of a species is:",
+    "choices": [
+      "Restricted by the presence of predators",
+      "Determined by the range of tolerance of a species to environmental factors",
+      "Restricted by the presence of competitors",
+      "Often found in nature",
+      "All of these are true of the fundamental niche."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q94",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "4",
+    "stem": "According to the ____________ principle, two species with identical requirements for existence cannot coexist indefinitely.",
+    "choices": [
+      "Law of tolerance",
+      "Competitive exclusion",
+      "Allopatric speciation",
+      "Adaptive radiation",
+      "Numerical response"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q95",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "5",
+    "stem": "Which of the following represent ways in which two ecologically-similar species can avoid competing with each other?",
+    "choices": [
+      "Each species occupies its own geographic range.",
+      "Each species occurs in its own microhabitat within the same geographic range.",
+      "Each species forages by its own unique method.",
+      "Each species feeds at different times of the day.",
+      "All of these are ways to avoid competition."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q96",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "6",
+    "stem": "In the Lotka-Volterra model of competition, coexistence between Species 1 and Species 2:",
+    "choices": [
+      "Is possible if N1 = N2",
+      "Is possible if K2 / a21 > K1 and K2 > K1 / a12",
+      "Is possible if K1 = K2",
+      "Is possible if a12 = a21",
+      "Is possible if K1 / a12 > K2 and K2 / a21 > K1"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q97",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "7",
+    "stem": "A form of competition, found in desert shrubs and sponges, in which one organism releases a chemical into the environment that inhibits another, is referred to as:",
+    "choices": [
+      "Allelopathy",
+      "Resource limitation",
+      "Allopatry",
+      "Commensalism",
+      "None of these"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q98",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "8",
+    "stem": "A consequence of resource partitioning is:",
+    "choices": [
+      "Increased competition",
+      "Decreased competition",
+      "Increased niche breadth",
+      "Increased niche overlap",
+      "Decreased diversity"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q99",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "9",
+    "stem": "In an Asian rice paddy, carp eat decaying material from around the base of rice plants while a snail scrapes algae from the leaves, stems and roots of the same plant. They can survive at the same time in the same rice paddy because they:",
+    "choices": [
+      "Occupy different habitats and different niches",
+      "Occupy the same niche but different habitats",
+      "Belong to different phyla",
+      "Occupy the same habitat but different niches",
+      "Occupy the same habitat and the same niche"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q100",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "10",
+    "stem": "Ecologist Robert MacArthur observed that five species of similar warblers coexisted on spruce trees because they:",
+    "choices": [
+      "Ate different kinds of insects",
+      "Were actually subspecies of the same species",
+      "Fed on insects on different trees",
+      "Foraged in different places on the tree",
+      "Cooperated in their foraging habits"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q101",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "11",
+    "stem": "In Australia, the moth Cactoblastis was introduced to control an outbreak of prickly pear cactus. This interaction between moths and the cactus represents an example of:",
+    "choices": [
+      "Carnivory",
+      "Herbivory",
+      "Interspecific competition",
+      "Facultative mutualism",
+      "Obligate mutualism"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q102",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "12",
+    "stem": "Pseudomyrmex ants live exclusively in the swollen thorns of acacia trees in Central America. In return for food and shelter provided by the trees, the ants aggressively defend the tree from leaf-eating insects. This interaction between ants and acacias represents an example of:",
+    "choices": [
+      "Interspecific competition",
+      "Obligate mutualism",
+      "Herbivory",
+      "Carnivory",
+      "Facultative mutualism"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q103",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "13",
+    "stem": "Many birds readily feed upon periodic cicadas when they emerge as adults. This interaction between birds and cicadas represents an example of:",
+    "choices": [
+      "Herbivory",
+      "Carnivory",
+      "Facultative mutualism",
+      "Obligate mutualism",
+      "Interspecific competition"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q104",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "14",
+    "stem": "Various ants patrol aspen sunflowers, defending the plants against other insects. In return, the plant supplies food to the ants from extrafloral nectaries. However, the ants are not found exclusively on the sunflowers, and not all sunflowers have ants associated with them. This interaction between ants and sunflowers represents an example of:",
+    "choices": [
+      "Carnivory",
+      "Obligate mutualism",
+      "Commensalism",
+      "Interspecific competition",
+      "Facultative mutualism"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q105",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "15",
+    "stem": "In commensalism :",
+    "choices": [
+      "One species is harmed while the other is benefited",
+      "Both species interacting are harmed",
+      "One species is benefited while the other is unaffected",
+      "Neither species is benefited nor harmed",
+      "Neither species benefits"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q106",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "16",
+    "stem": "Aphytis melinus is a species of wasp that lays its eggs on red-scale insects (Aonideiella aurantii). When the eggs hatch, the wasp larvae then use the scale insects as food. This special type of interaction is most appropriately called:",
+    "choices": [
+      "Parasitoidism",
+      "Commensalism",
+      "Mutualism",
+      "Carnivory",
+      "Parasitism"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q107",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "17",
+    "stem": "Which of the following statements is CORRECT concerning the functional response of predators to prey densities?",
+    "choices": [
+      "The percentage of prey consumed increases rapidly initially, but then decreases rapidly at high prey densities.",
+      "The percentage of prey consumed increases slowly at low prey densities, but then increases rapidly at high prey densities.",
+      "The percentage of prey consumed increases rapidly at low prey densities, but then levels off at high prey densities.",
+      "The percentage of prey consumed increases steadily with increasing prey densities.",
+      "The percentage of prey consumed decreases steadily with increasing prey densities."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q112",
+    "unit": "Unit 7: Population Interactions",
+    "source_question_no": "27",
+    "stem": "Species whose population numbers are resilient to disturbance would normally have all the listed characteristics, except",
+    "choices": [
+      "Long life span",
+      "Small body size",
+      "High reproductive rate",
+      "All the above would be characteristics of a resilient species."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q118",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "1",
+    "stem": "A ______ is an association of interacting species inhabiting some defined area.",
+    "choices": [
+      "Community",
+      "Niche",
+      "Biosphere",
+      "Ecosystem",
+      "Population"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q119",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "2",
+    "stem": "In community ecology, the term 'species richness' specifically refers to:",
+    "choices": [
+      "The ability of one species to enrich itself at the expense of another species",
+      "The number of different species present in a community",
+      "The population sizes of individual species present in a community",
+      "The proportion of total individuals each species comprises in the community",
+      "The number of guilds present in a community"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q120",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "3",
+    "stem": "Which of the following statements is TRUE for the typical pattern of species abundance in communities?",
+    "choices": [
+      "The pattern shows a bell-shaped curve when the logarithm of species abundances are plotted against the number of species.",
+      "The pattern is solely the result of competitive interactions among species.",
+      "The pattern is solely the result of frequency and magnitude of disturbance.",
+      "Most species are extremely rare.",
+      "Most species are very abundant."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q121",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "4",
+    "stem": "The value of the Shannon Index for a particular community depends upon:",
+    "choices": [
+      "Sample size",
+      "The number of species present",
+      "The relative abundance of each species present",
+      "All of these",
+      "None of these"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q122",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "5",
+    "stem": "Disturbance:",
+    "choices": [
+      "Rarely occurs in most natural environments",
+      "Has little effect on community diversity",
+      "Could include, for example, seasonal temperature variations",
+      "Refers to events that disrupt a community, such as fire",
+      "All of these are true of disturbance."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q123",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "6",
+    "stem": "According to Connell's hypothesis, species diversity is highest when disturbance is:",
+    "choices": [
+      "Nonexistent",
+      "Constant",
+      "Infrequent",
+      "Frequent",
+      "Intermediate in frequency"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q124",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "7",
+    "stem": "A gradual change in community composition through time is:",
+    "choices": [
+      "Evolution",
+      "Zonation",
+      "Succession",
+      "Disturbance",
+      "Gradation"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q125",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "8",
+    "stem": "In contrast to species in climax communities, pioneer species are more likely to have:",
+    "choices": [
+      "Long life spans",
+      "Large body sizes",
+      "Low dispersal abilities",
+      "High rates of reproduction",
+      "Good competitive abilities"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q126",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "9",
+    "stem": "Fire is an important disturbance maintaining community structure in all of the following biomes except:",
+    "choices": [
+      "Tallgrass prairie",
+      "Tundra",
+      "Coniferous forest",
+      "Chaparral",
+      "Fire is important in all of these biomes."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q127",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "10",
+    "stem": "Secondary succession is likely to occur in all of the following situations EXCEPT:",
+    "choices": [
+      "A shallow lake",
+      "After a fire in a coniferous forest",
+      "A lava flow that has recently cooled",
+      "A field that is abandoned after being used to grow crops for many years",
+      "Secondary succession is likely in all of these situations."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q128",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "11",
+    "stem": "Primary succession is likely to occur:",
+    "choices": [
+      "In an abandoned field",
+      "In a shallow lake",
+      "On bare rock following a volcanic eruption",
+      "A and B only",
+      "A, B and C"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q129",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "12",
+    "stem": "The Shannon Index is a measure of:",
+    "choices": [
+      "Species evenness in a community",
+      "Species richness in a community",
+      "Species richness between several communities",
+      "A and B",
+      "A, B and C"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q130",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "13",
+    "stem": "According to MacArthur and Wilson's theory of island biogeography, which of the following would be expected to have the lowest species diversity?",
+    "choices": [
+      "Small islands close to the mainland",
+      "Large islands far from the mainland",
+      "Large islands close to the mainland",
+      "Islands have equal species diversity regardless of size and distance from the mainland.",
+      "Small islands far from the mainland"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q131",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "14",
+    "stem": "In the theory of island biogeography, the number of species is the result of an equilibrium between what processes?",
+    "choices": [
+      "Immigration and extinction",
+      "Competition and predation",
+      "Emigration and extinction",
+      "Speciation and extinction",
+      "Emigration and immigration"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q132",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "15",
+    "stem": "Which of the following large scale patterns of species richness is/are TRUE for most taxa?",
+    "choices": [
+      "Islands have fewer species than adjacent mainland areas.",
+      "Higher altitudes have more species than lower altitudes.",
+      "Higher latitudes have more species than lower latitudes.",
+      "None of these statements are true.",
+      "All of these statements are true."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q133",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "16",
+    "stem": "The inhibition model of succession states that:",
+    "choices": [
+      "Succession proceeds from species that are less tolerant of a wide range of environmental conditions to species that are more tolerant of a wide range of environmental conditions.",
+      "Early successional species make the environment less suitable for later successional species.",
+      "Succession proceeds from species that are more tolerant of a wide range of environmental conditions to species that are less tolerant of a wide range of environmental conditions.",
+      "Early successional species make the environment more suitable for later successional species.",
+      "Colonization and growth of later successional species are unaffected by the species of earlier stages."
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q134",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "17",
+    "stem": "In the Sonoran Desert, the saguaro cactus, a climax species, requires a forb or shrub as a 'nurse' plant to shade it from potentially lethal temperatures when it is young. This situation would illustrate what model of succession?",
+    "choices": [
+      "Individualistic",
+      "Facilitation",
+      "Tolerance",
+      "Organismal",
+      "None of these"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q135",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "18",
+    "stem": "The Jaccard and Morisita indices are used to compare what?",
+    "choices": [
+      "Sizes of populations in different habitats",
+      "Species composition between separate communities",
+      "Species diversity within a single community",
+      "Species evenness within a single community",
+      "Species diversity of several communities"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q136",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "19",
+    "stem": "Predators, such as the starfish Pisaster, are keystone species because they:",
+    "choices": [
+      "Decrease the potential for competitive exclusion among herbivores, thus increasing species diversity in the community",
+      "Increase the potential for competitive exclusion among herbivores, thus increasing species diversity in the community",
+      "Decrease the potential for competitive exclusion among herbivores, thus decreasing species diversity in the community",
+      "Increase the potential for competitive exclusion among herbivores, thus decreasing species diversity in the community",
+      "Have no effect on species composition or diversity"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q137",
+    "unit": "Unit 8: Communities",
+    "source_question_no": "20",
+    "stem": "In contrast to the 'individualistic' concept of communities (e.g., Gleason), the 'organismic' view of Clements and others emphasizes the importance of what process in determining community composition?",
+    "choices": [
+      "Tolerance of species to abiotic factors",
+      "Coevolution",
+      "Intraspecific competition",
+      "Interspecific competition",
+      "Formation of environmental gradients"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q141",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "1",
+    "stem": "An ecosystem refers to what?",
+    "choices": [
+      "Area defined by the type of vegetation that is present",
+      "Biotic community and its abiotic environment",
+      "Group of similar organisms in a particular area",
+      "The abiotic environment",
+      "Influences of climate on a community"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q142",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "2",
+    "stem": "How does biomass differ from productivity?",
+    "choices": [
+      "Biomass is a measurement of productivity.",
+      "Biomass can be measured while productivity must be estimated.",
+      "Biomass does not differ from productivity; they are synonyms.",
+      "Biomass includes a measure of time while productivity does not.",
+      "Productivity is the rate at which biomass is produced."
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q143",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "3",
+    "stem": "Which of the following is NOT an example of research conducted on the ecosystem level?",
+    "choices": [
+      "Estimating rates of primary production",
+      "Transfer of energy through food web",
+      "Identifying pathways of energy flow",
+      "Determining rates of nutrient cycling",
+      "Investigating interspecific competition"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q144",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "4",
+    "stem": "Comprehensive studies of a few ecosystems emphasized the need for what type of research?",
+    "choices": [
+      "Long-term",
+      "Cross-disciplinary",
+      "Spatial scale",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q145",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "5",
+    "stem": "In photosynthesis, plants utilize what compound to make sugars and provide the basis of energy-flow in an ecosystem?",
+    "choices": [
+      "Oxygen",
+      "Carbon dioxide",
+      "Water",
+      "Both A and B",
+      "Both B and C"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q146",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "6",
+    "stem": "What is the difference in gross versus net primary production?",
+    "choices": [
+      "Gross production includes respiration, while net production does not.",
+      "Gross production is energy accumulated in plants while net production is energy accumulated in animals.",
+      "Gross production takes into account standing crop biomass while net production does not.",
+      "Net production is the difference between gross primary production and respiration.",
+      "Gross production refers to primary plus secondary production, while net production means the same as primary production."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q147",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "7",
+    "stem": "What factors can enhance primary production?",
+    "choices": [
+      "Warm temperature",
+      "Greater surface area of leaves",
+      "Increased precipitation",
+      "Addition of nutrients",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q148",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "8",
+    "stem": "Why do areas of high ecosystem productivity typically occur at the tropics?",
+    "choices": [
+      "High rainfall",
+      "Warm temperatures",
+      "Greater area",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q149",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "9",
+    "stem": "Plants that live in a harsh ecosystem are more likely to have:",
+    "choices": [
+      "A high root-to-shoot (R/S) ratio",
+      "Chemically-defended tissues",
+      "Thin, non-waxy leaves",
+      "A low root-to-shoot (R/S) ratio",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q150",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "10",
+    "stem": "Which of the following is a likely example of a secondary consumer?",
+    "choices": [
+      "Algae taking up nutrients",
+      "Small fish consuming zooplankton",
+      "Human catching a large fish",
+      "Zooplankton grazing on algae",
+      "Large fish eating a small fish"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q151",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "11",
+    "stem": "Ecosystem ecologists often focus on what type of data?",
+    "choices": [
+      "Rates",
+      "Species lists",
+      "Number of functional feeding groups",
+      "Genetic frequencies",
+      "Population estimates"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q152",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "12",
+    "stem": "The idea of energy transfer and decreasing assimilation efficiency through a food web can be traced to what early ecologists?",
+    "choices": [
+      "Charles Elton",
+      "R. A. Lindeman",
+      "Charles Darwin",
+      "G. Tansley",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q153",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "13",
+    "stem": "Which of the following is an example of a heterotroph?",
+    "choices": [
+      "Tree",
+      "Submerged macrophyte",
+      "Bacteria",
+      "Algae",
+      "Grass"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q154",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "14",
+    "stem": "Which component of an ecosystem's food web is primarily responsible for nutrient cycling and energy transfer?",
+    "choices": [
+      "Primary producers",
+      "Primary consumers",
+      "Omnivores",
+      "Decomposers",
+      "Secondary consumers"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q155",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "15",
+    "stem": "In contrast to poikilotherms, homeotherms must devote more of their assimilated energy to what process?",
+    "choices": [
+      "Maintenance",
+      "Growth",
+      "Reproduction",
+      "Defense",
+      "None of the above"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q156",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "16",
+    "stem": "The percentage of energy transferred from one trophic level to the next is called what?",
+    "choices": [
+      "Assimilation efficiency",
+      "Compensation intensity",
+      "Production efficiency",
+      "Predation",
+      "Primary production"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q157",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "17",
+    "stem": "Which of the following could be considered an ecosystem service?",
+    "choices": [
+      "Wetlands that provide flood control",
+      "Rain forests that possess high biological diversity",
+      "Rivers that are used to transport goods",
+      "Soils that are used to clean up pollution",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q158",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "18",
+    "stem": "Which of the following could be a title for an ecosystem study?",
+    "choices": [
+      "Biogeochemical cycling through sedimentary bedrock",
+      "Frequency of sympatric speciation in apple flies",
+      "Influence of wave action on nutrient cycling between sea grasses, urchins and otters",
+      "Resource competition between two algal species",
+      "Costs and benefits of diel vertical migration, a predator-avoidance strategy by zooplankton"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q159",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "19",
+    "stem": "Criticisms of whole ecosystem experiments have included all of the following EXCEPT:",
+    "choices": [
+      "Too expensive",
+      "No 'control' or 'natural' system for comparison",
+      "No or low replication",
+      "Unrealistic",
+      "Requires interdisciplinary efforts"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q160",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "20",
+    "stem": "Production and what else dictate rates of organic matter accumulation?",
+    "choices": [
+      "Decomposition",
+      "Temperature",
+      "Soil type",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q180",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "40",
+    "stem": "Why are both carbon dioxide and oxygen limited in aquatic environments?",
+    "choices": [
+      "They are not very soluble.",
+      "They change to different chemical forms in water.",
+      "They cannot diffuse across cell membranes.",
+      "They are rare in the atmosphere and therefore limited in water."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q182",
+    "unit": "Unit 9: Ecosystems",
+    "source_question_no": "42",
+    "stem": "How does water in a bog differ from water in other locations?",
+    "choices": [
+      "More bicarbonate and more carbon dioxide are available.",
+      "More bicarbonate and less carbon dioxide are available.",
+      "Less bicarbonate and more carbon dioxide are available.",
+      "Less bicarbonate and less carbon dioxide are available."
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q191",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "1",
+    "stem": "Rates of decomposition depend on what?",
+    "choices": [
+      "Temperature",
+      "Carbon content of material",
+      "Oxygen availability",
+      "Primary production",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q192",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "2",
+    "stem": "Terrestrial matter that enters aquatic systems such as lakes and streams is termed what?",
+    "choices": [
+      "Labile material",
+      "Refractory material",
+      "Autochthonous input",
+      "Litter input",
+      "Allochthonous input"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q193",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "3",
+    "stem": "How do forests and lakes differ in nutrient cycling?",
+    "choices": [
+      "Forests are often limited by nitrogen, while phosphorus is more important in lakes.",
+      "Long-term nutrient cycling is more common in forests while short-term cycling more commonly takes place within the biota of lakes.",
+      "Long-term nutrient storage does not take place in lakes.",
+      "Retention of nutrients is less likely in forests than lakes.",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q194",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "4",
+    "stem": "What is the compensation level in lakes?",
+    "choices": [
+      "The point where maximum photosynthesis occurs",
+      "The point at which photosynthesis equals respiration, or where photosynthesis becomes limited by light",
+      "The point at which respiration exceeds photosynthesis",
+      "The change in temperature as depth increases",
+      "The point where nutrient inputs equal nutrient outputs"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q195",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "5",
+    "stem": "Global climate change refers to what?",
+    "choices": [
+      "Increasing carbon dioxide concentrations in the atmosphere",
+      "Increasing global temperatures",
+      "Changes in land use patterns",
+      "Changes in sea level patterns",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q196",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "6",
+    "stem": "Which of these processes is most likely to occur under conditions of nitrogen limitation?",
+    "choices": [
+      "Nitrogen fixation",
+      "Nitrification",
+      "Denitrification",
+      "Ammonification",
+      "None of the above"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q197",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "7",
+    "stem": "Bacteria mediate which of the following steps in the nitrogen cycle?",
+    "choices": [
+      "Nitrogen fixation",
+      "Nitrification",
+      "Denitrification",
+      "All of the above",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q198",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "8",
+    "stem": "Availability of which global element depends partially on weathering?",
+    "choices": [
+      "Phosphorus",
+      "Sulfur",
+      "Nitrogen",
+      "Carbon",
+      "Both A and B"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q199",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "9",
+    "stem": "Stoichiometry refers to what?",
+    "choices": [
+      "The study of global nutrient cycling",
+      "The study of the quantitative relationship of elements in combination",
+      "The study of decomposition",
+      "The study of nutrient limitation",
+      "The study of global climate change"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q200",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "10",
+    "stem": "Which greenhouse gas is considered most damaging to the ozone layer?",
+    "choices": [
+      "CFC, chlorinated fluorocarbons",
+      "CH4 , methane",
+      "ClO, chlorine monoxide",
+      "NO 2 , nitrous oxide",
+      "CO 2 , carbon dioxide"
+    ],
+    "answer_indices": [
+      2
+    ],
+    "answer_letters": "C"
+  },
+  {
+    "id": "q201",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "11",
+    "stem": "Reduction in the global ozone layer can result in which of the following?",
+    "choices": [
+      "DNA alteration",
+      "Increased incidence of cancer",
+      "Increased likelihood of sunburn",
+      "Inhibited photosynthesis",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  },
+  {
+    "id": "q202",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "12",
+    "stem": "Much of the global carbon pool is stored where?",
+    "choices": [
+      "Oceans",
+      "Peatlands",
+      "Lakes",
+      "Forests",
+      "Grasslands"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q203",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "13",
+    "stem": "Which of the following anthropogenic processes is responsible for alteration of the global nitrogen cycle?",
+    "choices": [
+      "Industrialization",
+      "Changes in land use patterns",
+      "Increased use of fertilizers",
+      "All of the above",
+      "Anthropogenic processes do not play a key role in altering the global nitrogen cycle."
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q204",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "14",
+    "stem": "What makes the global phosphorus cycle unique?",
+    "choices": [
+      "Absence of a significant atmospheric component",
+      "Phosphorus is the limiting element for most terrestrial ecosystems.",
+      "The global phosphorus cycle is the least impacted by anthropogenic activities.",
+      "Only phosphorus inputs are influenced by weathering.",
+      "Most steps in phosphorus cycling are mediated by bacteria."
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q205",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "15",
+    "stem": "Sulfur is associated with what global problem?",
+    "choices": [
+      "Acid deposition and precipitation",
+      "Global warming",
+      "Ozone depletion",
+      "Lead accumulation",
+      "Cultural eutrophication"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q206",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "16",
+    "stem": "Concentration of harmful concentrations of metals or toxic substances through food webs in ecosystems is termed what?",
+    "choices": [
+      "Biomanipulation",
+      "Biomagnification",
+      "Eutrophication",
+      "Trophic level",
+      "Biogeography"
+    ],
+    "answer_indices": [
+      1
+    ],
+    "answer_letters": "B"
+  },
+  {
+    "id": "q207",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "17",
+    "stem": "How does elevated carbon dioxide impact animals that break down terrestrial matter?",
+    "choices": [
+      "Makes organic matter more refractory (i.e., harder to break down)",
+      "Reduces the quality of organic matter",
+      "Decreases the amount of food available",
+      "Both A and B",
+      "None of the above"
+    ],
+    "answer_indices": [
+      3
+    ],
+    "answer_letters": "D"
+  },
+  {
+    "id": "q208",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "18",
+    "stem": "Rise in sea level is directly attributed to what?",
+    "choices": [
+      "Melting of the glaciers",
+      "Ozone depletion",
+      "Acid deposition",
+      "Cultural eutrophication",
+      "Increasing global temperatures"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q209",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "19",
+    "stem": "Indirect effects of global climate change could include:",
+    "choices": [
+      "Increase in disease",
+      "Decrease in water availability",
+      "Increase in heavy metal accumulation",
+      "Increased summer mortality rates for humans",
+      "All of the above"
+    ],
+    "answer_indices": [
+      0
+    ],
+    "answer_letters": "A"
+  },
+  {
+    "id": "q210",
+    "unit": "Unit 10: Global Ecology",
+    "source_question_no": "20",
+    "stem": "Studying global climate change involves which of the following?",
+    "choices": [
+      "Long-term studies",
+      "Interdisciplinary efforts",
+      "Intensive funding",
+      "International cooperation",
+      "All of the above"
+    ],
+    "answer_indices": [
+      4
+    ],
+    "answer_letters": "E"
+  }
+]
+  </script>
+  <script>
+    const QUESTION_BANK = JSON.parse(document.getElementById("question-bank").textContent);
+    const QUIZ_SIZE = 20;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const state = {
+      quiz: [],
+      selected: {},
+      submitted: false,
+      filter: "all"
+    };
+
+    const quizForm = document.getElementById("quiz-form");
+    const scorePanel = document.getElementById("score-panel");
+    const answeredCount = document.getElementById("answered-count");
+    const reviewFilter = document.getElementById("review-filter");
+    const liveStatus = document.getElementById("live-status");
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function sameSet(first, second) {
+      if (first.length !== second.length) return false;
+      const left = [...first].sort((a, b) => a - b);
+      const right = [...second].sort((a, b) => a - b);
+      return left.every((value, index) => value === right[index]);
+    }
+
+    function getSelected(questionId) {
+      return state.selected[questionId] || [];
+    }
+
+    function isAnswered(question) {
+      return getSelected(question.id).length > 0;
+    }
+
+    function isCorrect(question) {
+      return sameSet(getSelected(question.id), question.answer_indices);
+    }
+
+    function answerText(question) {
+      return question.answer_indices
+        .map((index) => `${letters[index]}. ${question.choices[index]}`)
+        .join("；");
+    }
+
+    function updateAnsweredCount() {
+      const answered = state.quiz.filter(isAnswered).length;
+      answeredCount.textContent = `${answered}/${state.quiz.length}`;
+    }
+
+    function questionShouldShow(question) {
+      if (!state.submitted || state.filter === "all") return true;
+      if (state.filter === "wrong") return !isCorrect(question);
+      if (state.filter === "unanswered") return !isAnswered(question);
+      return true;
+    }
+
+    function renderScore() {
+      if (!state.submitted) {
+        scorePanel.className = "score-panel";
+        scorePanel.innerHTML = "";
+        return;
+      }
+
+      const correct = state.quiz.filter(isCorrect).length;
+      const unanswered = state.quiz.filter((question) => !isAnswered(question)).length;
+      const percent = Math.round((correct / state.quiz.length) * 100);
+      const wrong = state.quiz.length - correct;
+
+      scorePanel.className = "score-panel is-visible";
+      scorePanel.innerHTML = `
+        <div>
+          <div class="score-main">
+            <span class="score-value">${correct}/${state.quiz.length}</span>
+            <strong>${percent} 分</strong>
+          </div>
+          <p class="score-note">错题 ${wrong} 道，未答 ${unanswered} 道。页面已标出正确答案。</p>
+        </div>
+        <button class="button secondary" type="button" id="again-from-score" title="重新随机抽题">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>再来一组
+        </button>
+      `;
+      document.getElementById("again-from-score").addEventListener("click", startQuiz);
+    }
+
+    function renderQuiz() {
+      updateAnsweredCount();
+      renderScore();
+
+      const visibleQuestions = state.quiz.filter(questionShouldShow);
+      if (!visibleQuestions.length) {
+        quizForm.innerHTML = '<div class="empty-state">当前筛选下没有题目。</div>';
+        return;
+      }
+
+      quizForm.innerHTML = visibleQuestions.map((question) => renderQuestion(question)).join("");
+    }
+
+    function renderQuestion(question) {
+      const quizNumber = state.quiz.indexOf(question) + 1;
+      const selected = getSelected(question.id);
+      const reviewedClass = state.submitted ? " is-reviewed" : "";
+      const statusClass = state.submitted
+        ? isCorrect(question)
+          ? " is-correct"
+          : isAnswered(question)
+            ? " is-wrong"
+            : " is-unanswered"
+        : "";
+      const inputType = question.answer_indices.length > 1 ? "checkbox" : "radio";
+      const choiceMarkup = question.choices.map((choice, index) => {
+        const checked = selected.includes(index) ? " checked" : "";
+        const disabled = state.submitted ? " disabled" : "";
+        const pickedWrong = state.submitted && selected.includes(index) && !question.answer_indices.includes(index);
+        const missed = state.submitted && !selected.includes(index) && question.answer_indices.includes(index);
+        const answer = state.submitted && question.answer_indices.includes(index);
+        const classes = [
+          "choice",
+          selected.includes(index) ? "is-selected" : "",
+          answer ? "is-answer" : "",
+          pickedWrong ? "is-picked-wrong" : "",
+          missed ? "is-missed" : ""
+        ].filter(Boolean).join(" ");
+
+        return `
+          <label class="${classes}">
+            <input type="${inputType}" name="${question.id}" value="${index}" data-question-id="${question.id}"${checked}${disabled}>
+            <span><span class="choice-letter">${letters[index]}.</span>${escapeHtml(choice)}</span>
+          </label>
+        `;
+      }).join("");
+
+      return `
+        <article class="question-card${statusClass}${reviewedClass}" data-question-id="${question.id}">
+          <div class="question-head">
+            <span class="question-no">${quizNumber}</span>
+            <div>
+              <h2 class="question-title">${escapeHtml(question.stem)}</h2>
+              <div class="question-meta">${escapeHtml(question.unit || "Question Bank")}</div>
+            </div>
+          </div>
+          <div class="choices">${choiceMarkup}</div>
+          <p class="answer-line"><strong>正确答案：</strong>${escapeHtml(answerText(question))}</p>
+        </article>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function handleChoiceChange(event) {
+      const input = event.target;
+      if (!input.matches("input[data-question-id]")) return;
+
+      const questionId = input.dataset.questionId;
+      const value = Number(input.value);
+      const question = state.quiz.find((item) => item.id === questionId);
+
+      if (question.answer_indices.length > 1) {
+        const current = new Set(getSelected(questionId));
+        if (input.checked) {
+          current.add(value);
+        } else {
+          current.delete(value);
+        }
+        state.selected[questionId] = [...current];
+      } else {
+        state.selected[questionId] = [value];
+      }
+
+      renderQuiz();
+    }
+
+    function submitQuiz() {
+      state.submitted = true;
+      state.filter = "all";
+      reviewFilter.value = "all";
+      renderQuiz();
+      const correct = state.quiz.filter(isCorrect).length;
+      liveStatus.textContent = `已判分，答对 ${correct} 道。`;
+      scorePanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetAnswers() {
+      state.selected = {};
+      state.submitted = false;
+      state.filter = "all";
+      reviewFilter.value = "all";
+      renderQuiz();
+      liveStatus.textContent = "当前选择已清空。";
+    }
+
+    function startQuiz() {
+      state.quiz = shuffle(QUESTION_BANK).slice(0, QUIZ_SIZE);
+      state.selected = {};
+      state.submitted = false;
+      state.filter = "all";
+      reviewFilter.value = "all";
+      renderQuiz();
+      liveStatus.textContent = "已随机抽取新题组。";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    quizForm.addEventListener("change", handleChoiceChange);
+    document.getElementById("new-quiz").addEventListener("click", startQuiz);
+    document.getElementById("submit-quiz").addEventListener("click", submitQuiz);
+    document.getElementById("reset-answers").addEventListener("click", resetAnswers);
+    reviewFilter.addEventListener("change", (event) => {
+      state.filter = event.target.value;
+      renderQuiz();
+    });
+
+    startQuiz();
+  </script>
+</body>
+</html>
