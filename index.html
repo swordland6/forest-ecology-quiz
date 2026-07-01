@@ -5391,12 +5391,33 @@
     const mistakeCount = document.getElementById("mistake-count");
     const clearMistakesButton = document.getElementById("clear-mistakes");
 
+    function wrongCountFor(entry) {
+      if (!entry) return 0;
+      const count = Number(entry.wrongCount);
+      return Number.isFinite(count) && count > 0 ? Math.floor(count) : 1;
+    }
+
+    function nextWrongCount(existing) {
+      return wrongCountFor(existing) + 1;
+    }
+
     function loadMistakeBook() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (!saved) return {};
         const parsed = JSON.parse(saved);
-        return parsed && typeof parsed === "object" ? parsed : {};
+        if (!parsed || typeof parsed !== "object") return {};
+
+        return Object.entries(parsed).reduce((book, [key, entry]) => {
+          if (!entry || typeof entry !== "object") return book;
+          const id = entry.id || key;
+          book[id] = {
+            ...entry,
+            id,
+            wrongCount: wrongCountFor(entry)
+          };
+          return book;
+        }, {});
       } catch (error) {
         return {};
       }
@@ -5411,7 +5432,10 @@
     }
 
     function getMistakeEntry(questionId) {
-      return state.mistakeBook[questionId] || null;
+      const entry = state.mistakeBook[questionId] || null;
+      if (!entry) return null;
+      entry.wrongCount = wrongCountFor(entry);
+      return entry;
     }
 
     function getMistakeQuestions() {
@@ -5421,8 +5445,10 @@
         .sort((first, second) => {
           const firstEntry = state.mistakeBook[first.id];
           const secondEntry = state.mistakeBook[second.id];
-          if (secondEntry.wrongCount !== firstEntry.wrongCount) {
-            return secondEntry.wrongCount - firstEntry.wrongCount;
+          const firstWrongCount = wrongCountFor(firstEntry);
+          const secondWrongCount = wrongCountFor(secondEntry);
+          if (secondWrongCount !== firstWrongCount) {
+            return secondWrongCount - firstWrongCount;
           }
           return String(secondEntry.lastWrongAt || "").localeCompare(String(firstEntry.lastWrongAt || ""));
         });
@@ -5529,7 +5555,7 @@
             unit: question.unit,
             answer_indices: question.answer_indices,
             answer_letters: question.answer_letters,
-            wrongCount: existing ? existing.wrongCount + 1 : 1,
+            wrongCount: nextWrongCount(existing),
             lastSelected: selected,
             lastWrongAt: now
           };
@@ -5626,7 +5652,7 @@
       const selected = getSelected(question.id);
       const mistakeEntry = getMistakeEntry(question.id);
       const mistakeBadge = mistakeEntry
-        ? `<span class="mistake-badge">做错 ${mistakeEntry.wrongCount} 次</span>`
+        ? `<span class="mistake-badge">做错 ${wrongCountFor(mistakeEntry)} 次</span>`
         : "";
       const reviewedClass = state.submitted ? " is-reviewed" : "";
       const statusClass = state.submitted
