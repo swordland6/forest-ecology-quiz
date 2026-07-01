@@ -127,6 +127,7 @@
 
     .mode-tabs {
       display: inline-flex;
+      flex-wrap: wrap;
       min-height: 40px;
       padding: 3px;
       border: 1px solid var(--line);
@@ -213,6 +214,7 @@
 
     .button:focus-visible,
     .choice input:focus-visible + span,
+    .translation-input:focus-visible,
     select:focus-visible {
       outline: 3px solid rgba(25, 118, 129, 0.28);
       outline-offset: 3px;
@@ -380,6 +382,43 @@
       padding: 8px 18px 18px 74px;
     }
 
+    .term-answer-box {
+      display: grid;
+      gap: 8px;
+      padding: 8px 18px 18px 74px;
+    }
+
+    .translation-input {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfb;
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+
+    .translation-input::placeholder {
+      color: #88938e;
+    }
+
+    .translation-input:disabled {
+      background: #f4f8f6;
+      color: var(--ink);
+      opacity: 1;
+    }
+
+    .translation-input.is-correct {
+      border-color: rgba(47, 125, 92, 0.6);
+      background: #edf7f1;
+    }
+
+    .translation-input.is-wrong {
+      border-color: rgba(200, 121, 38, 0.48);
+      background: #fff6e8;
+    }
+
     .choice {
       display: grid;
       grid-template-columns: 24px minmax(0, 1fr);
@@ -498,6 +537,15 @@
         width: 100%;
       }
 
+      .mode-tabs {
+        width: 100%;
+      }
+
+      .mode-tab {
+        flex: 1 1 calc(50% - 3px);
+        justify-content: center;
+      }
+
       #clear-mistakes {
         flex-basis: 100%;
         justify-content: center;
@@ -522,6 +570,10 @@
       }
 
       .choices {
+        padding: 8px 14px 16px 14px;
+      }
+
+      .term-answer-box {
         padding: 8px 14px 16px 14px;
       }
 
@@ -585,6 +637,8 @@
         <div class="mode-tabs" role="group" aria-label="刷题模式">
           <button class="mode-tab is-active" id="mode-practice" type="button" aria-pressed="true" title="随机练习"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>随机练习</button>
           <button class="mode-tab" id="mode-mistakes" type="button" aria-pressed="false" title="练习错题本"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/><path d="M8 7h8"/><path d="M8 11h6"/></svg>错题本</button>
+          <button class="mode-tab" id="mode-en-zh" type="button" aria-pressed="false" title="英译汉 10 题"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>英译汉</button>
+          <button class="mode-tab" id="mode-zh-en" type="button" aria-pressed="false" title="汉译英 10 题"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>汉译英</button>
         </div>
         <button class="button secondary" id="new-quiz" type="button" title="重新随机抽 20 题"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组</button>
         <button class="button submit" id="submit-quiz" type="button" title="提交并判分"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>提交判分</button>
@@ -601,7 +655,7 @@
         <button class="button secondary" id="clear-mistakes" type="button" title="清空错题本"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>清空错题本</button>
         <div class="counter" aria-live="polite">
           <span><strong id="answered-count">0/20</strong> 已作答</span>
-          <span id="bank-count">211 道可判分题</span>
+          <span id="bank-count">211 道选择题 · 190 条术语</span>
         </div>
       </div>
     </nav>
@@ -4164,14 +4218,1161 @@
   }
 ]
   </script>
+  <script id="term-bank" type="application/json">
+[
+  {
+    "id": "t1",
+    "en": "ecology",
+    "zh": "生态学",
+    "source": "术语 1"
+  },
+  {
+    "id": "t2",
+    "en": "forest ecology",
+    "zh": "森林生态学",
+    "source": "术语 1"
+  },
+  {
+    "id": "t3",
+    "en": "individual/organism",
+    "zh": "个体",
+    "source": "术语 1"
+  },
+  {
+    "id": "t4",
+    "en": "population",
+    "zh": "种群",
+    "source": "术语 1"
+  },
+  {
+    "id": "t5",
+    "en": "communities",
+    "zh": "群落",
+    "source": "术语 1"
+  },
+  {
+    "id": "t6",
+    "en": "ecosystem",
+    "zh": "生态系统",
+    "source": "术语 1"
+  },
+  {
+    "id": "t7",
+    "en": "abiotic factor",
+    "zh": "非生物因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t8",
+    "en": "biotic factor",
+    "zh": "生物因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t9",
+    "en": "environment",
+    "zh": "环境",
+    "source": "术语 1"
+  },
+  {
+    "id": "t10",
+    "en": "reproduction",
+    "zh": "繁殖",
+    "source": "术语 1"
+  },
+  {
+    "id": "t11",
+    "en": "phenotypic",
+    "zh": "表型",
+    "source": "术语 1"
+  },
+  {
+    "id": "t12",
+    "en": "offspring",
+    "zh": "后代",
+    "source": "术语 1"
+  },
+  {
+    "id": "t13",
+    "en": "gene",
+    "zh": "基因",
+    "source": "术语 1"
+  },
+  {
+    "id": "t14",
+    "en": "solar radiation",
+    "zh": "太阳辐射",
+    "source": "术语 1"
+  },
+  {
+    "id": "t15",
+    "en": "niche",
+    "zh": "生态位",
+    "source": "术语 1"
+  },
+  {
+    "id": "t16",
+    "en": "habitat",
+    "zh": "栖息地/生境",
+    "source": "术语 1"
+  },
+  {
+    "id": "t17",
+    "en": "climatic factor",
+    "zh": "气候因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t18",
+    "en": "edaphic factor",
+    "zh": "土壤因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t19",
+    "en": "topographic factor",
+    "zh": "地形因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t20",
+    "en": "biotic facto",
+    "zh": "生物因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t21",
+    "en": "fire",
+    "zh": "火因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t22",
+    "en": "anthropogenic factor",
+    "zh": "人为因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t23",
+    "en": "limiting factor",
+    "zh": "限制因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t24",
+    "en": "shelford’s law of tolerance",
+    "zh": "谢尔福德耐性定律",
+    "source": "术语 1"
+  },
+  {
+    "id": "t25",
+    "en": "ecological amplitude",
+    "zh": "生态幅",
+    "source": "术语 1"
+  },
+  {
+    "id": "t26",
+    "en": "adaptation",
+    "zh": "适应",
+    "source": "术语 1"
+  },
+  {
+    "id": "t27",
+    "en": "fitness",
+    "zh": "适合度",
+    "source": "术语 1"
+  },
+  {
+    "id": "t28",
+    "en": "natural selection",
+    "zh": "自然选择",
+    "source": "术语 1"
+  },
+  {
+    "id": "t29",
+    "en": "genotype",
+    "zh": "基因型",
+    "source": "术语 1"
+  },
+  {
+    "id": "t30",
+    "en": "phenotype",
+    "zh": "表型",
+    "source": "术语 1"
+  },
+  {
+    "id": "t31",
+    "en": "acclimation /acclimatization",
+    "zh": "驯化",
+    "source": "术语 1"
+  },
+  {
+    "id": "t32",
+    "en": "photoperiodism /photoperiodicity",
+    "zh": "光周期",
+    "source": "术语 1"
+  },
+  {
+    "id": "t33",
+    "en": "fundamental niche",
+    "zh": "基础生态位",
+    "source": "术语 1"
+  },
+  {
+    "id": "t34",
+    "en": "realized niche",
+    "zh": "实际生态位",
+    "source": "术语 1"
+  },
+  {
+    "id": "t35",
+    "en": "prey",
+    "zh": "猎物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t36",
+    "en": "predator",
+    "zh": "捕食者",
+    "source": "术语 1"
+  },
+  {
+    "id": "t37",
+    "en": "foraging",
+    "zh": "觅食",
+    "source": "术语 1"
+  },
+  {
+    "id": "t38",
+    "en": "scale",
+    "zh": "尺度",
+    "source": "术语 1"
+  },
+  {
+    "id": "t39",
+    "en": "homeotherm",
+    "zh": "恒温动物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t40",
+    "en": "poikilotherm",
+    "zh": "变温动物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t41",
+    "en": "dehydration",
+    "zh": "脱水",
+    "source": "术语 1"
+  },
+  {
+    "id": "t42",
+    "en": "vernalization",
+    "zh": "春化",
+    "source": "术语 1"
+  },
+  {
+    "id": "t43",
+    "en": "isotherm",
+    "zh": "等温线",
+    "source": "术语 1"
+  },
+  {
+    "id": "t44",
+    "en": "photosynthesis",
+    "zh": "光合作用",
+    "source": "术语 1"
+  },
+  {
+    "id": "t45",
+    "en": "compensation point",
+    "zh": "补偿点",
+    "source": "术语 1"
+  },
+  {
+    "id": "t46",
+    "en": "photosynthetically active radiation （PAR）",
+    "zh": "光合有效辐射",
+    "source": "术语 1"
+  },
+  {
+    "id": "t47",
+    "en": "evaporation",
+    "zh": "蒸发",
+    "source": "术语 1"
+  },
+  {
+    "id": "t48",
+    "en": "transpiration",
+    "zh": "蒸腾",
+    "source": "术语 1"
+  },
+  {
+    "id": "t49",
+    "en": "effective accumulated temperature",
+    "zh": "有效积温",
+    "source": "术语 1"
+  },
+  {
+    "id": "t50",
+    "en": "nitrogen fixation",
+    "zh": "固氮作用",
+    "source": "术语 1"
+  },
+  {
+    "id": "t51",
+    "en": "ammonification",
+    "zh": "氨化作用",
+    "source": "术语 1"
+  },
+  {
+    "id": "t52",
+    "en": "mineralization",
+    "zh": "矿化作用",
+    "source": "术语 1"
+  },
+  {
+    "id": "t53",
+    "en": "nitrification",
+    "zh": "硝化作用",
+    "source": "术语 1"
+  },
+  {
+    "id": "t54",
+    "en": "dinitrification",
+    "zh": "反硝化作用",
+    "source": "术语 1"
+  },
+  {
+    "id": "t55",
+    "en": "population density",
+    "zh": "种群密度",
+    "source": "术语 1"
+  },
+  {
+    "id": "t56",
+    "en": "immigration",
+    "zh": "迁入",
+    "source": "术语 1"
+  },
+  {
+    "id": "t57",
+    "en": "emigration",
+    "zh": "迁出",
+    "source": "术语 1"
+  },
+  {
+    "id": "t58",
+    "en": "unitary organism",
+    "zh": "单体生物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t59",
+    "en": "modular organism",
+    "zh": "构件生物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t60",
+    "en": "age pyramid",
+    "zh": "年龄金字塔",
+    "source": "术语 1"
+  },
+  {
+    "id": "t61",
+    "en": "natality",
+    "zh": "出生率",
+    "source": "术语 1"
+  },
+  {
+    "id": "t62",
+    "en": "mortality",
+    "zh": "死亡率",
+    "source": "术语 1"
+  },
+  {
+    "id": "t63",
+    "en": "survivorship",
+    "zh": "存活率",
+    "source": "术语 1"
+  },
+  {
+    "id": "t64",
+    "en": "life table",
+    "zh": "生命表",
+    "source": "术语 1"
+  },
+  {
+    "id": "t65",
+    "en": "K-factor analysis",
+    "zh": "K-因子分析",
+    "source": "术语 1"
+  },
+  {
+    "id": "t66",
+    "en": "population growth",
+    "zh": "种群增长",
+    "source": "术语 1"
+  },
+  {
+    "id": "t67",
+    "en": "density-independent population growth",
+    "zh": "非密度制约性种群增长",
+    "source": "术语 1"
+  },
+  {
+    "id": "t68",
+    "en": "density-dependent population growth",
+    "zh": "密度制约性种群增长",
+    "source": "术语 1"
+  },
+  {
+    "id": "t69",
+    "en": "the logistic equation",
+    "zh": "逻辑斯缔方程",
+    "source": "术语 1"
+  },
+  {
+    "id": "t70",
+    "en": "life expectancy",
+    "zh": "生命期望",
+    "source": "术语 1"
+  },
+  {
+    "id": "t71",
+    "en": "survivorship curve",
+    "zh": "存活曲线",
+    "source": "术语 1"
+  },
+  {
+    "id": "t72",
+    "en": "cohort",
+    "zh": "同生群",
+    "source": "术语 1"
+  },
+  {
+    "id": "t73",
+    "en": "key factor",
+    "zh": "关键因子",
+    "source": "术语 1"
+  },
+  {
+    "id": "t74",
+    "en": "environment/carrying capacity",
+    "zh": "环境容纳量",
+    "source": "术语 1"
+  },
+  {
+    "id": "t75",
+    "en": "density dependence",
+    "zh": "密度制约",
+    "source": "术语 1"
+  },
+  {
+    "id": "t76",
+    "en": "biological invasion",
+    "zh": "生物入侵",
+    "source": "术语 1"
+  },
+  {
+    "id": "t77",
+    "en": "life history",
+    "zh": "生活史",
+    "source": "术语 1"
+  },
+  {
+    "id": "t78",
+    "en": "competition",
+    "zh": "竞争",
+    "source": "术语 1"
+  },
+  {
+    "id": "t79",
+    "en": "predation",
+    "zh": "捕食",
+    "source": "术语 1"
+  },
+  {
+    "id": "t80",
+    "en": "parasitism",
+    "zh": "寄生",
+    "source": "术语 1"
+  },
+  {
+    "id": "t81",
+    "en": "mutualism",
+    "zh": "互利共生",
+    "source": "术语 1"
+  },
+  {
+    "id": "t82",
+    "en": "intraspecific competition",
+    "zh": "种内竞争",
+    "source": "术语 1"
+  },
+  {
+    "id": "t83",
+    "en": "interspecific competition",
+    "zh": "种间竞争",
+    "source": "术语 1"
+  },
+  {
+    "id": "t84",
+    "en": "exploitation competition",
+    "zh": "利用性竞争",
+    "source": "术语 1"
+  },
+  {
+    "id": "t85",
+    "en": "interference competition",
+    "zh": "干扰性竞争",
+    "source": "术语 1"
+  },
+  {
+    "id": "t86",
+    "en": "cannibalism",
+    "zh": "自相残杀",
+    "source": "术语 1"
+  },
+  {
+    "id": "t87",
+    "en": "altruism",
+    "zh": "利他主义",
+    "source": "术语 1"
+  },
+  {
+    "id": "t88",
+    "en": "commensalism",
+    "zh": "偏利共生",
+    "source": "术语 1"
+  },
+  {
+    "id": "t89",
+    "en": "amensalism",
+    "zh": "偏害共生",
+    "source": "术语 1"
+  },
+  {
+    "id": "t90",
+    "en": "territoriality",
+    "zh": "领域性",
+    "source": "术语 1"
+  },
+  {
+    "id": "t91",
+    "en": "niche shift",
+    "zh": "生态位转移",
+    "source": "术语 1"
+  },
+  {
+    "id": "t92",
+    "en": "self-thinning",
+    "zh": "自疏",
+    "source": "术语 1"
+  },
+  {
+    "id": "t93",
+    "en": "herbivores",
+    "zh": "食草动物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t94",
+    "en": "carnivores",
+    "zh": "食肉动物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t95",
+    "en": "omnivores",
+    "zh": "杂食动物",
+    "source": "术语 1"
+  },
+  {
+    "id": "t96",
+    "en": "chemical defences",
+    "zh": "化学防御",
+    "source": "术语 1"
+  },
+  {
+    "id": "t97",
+    "en": "senescence",
+    "zh": "衰老",
+    "source": "术语 1"
+  },
+  {
+    "id": "t98",
+    "en": "diapause",
+    "zh": "滞育",
+    "source": "术语 1"
+  },
+  {
+    "id": "t99",
+    "en": "dormancy",
+    "zh": "休眠",
+    "source": "术语 1"
+  },
+  {
+    "id": "t100",
+    "en": "longevity",
+    "zh": "寿命",
+    "source": "术语 1"
+  },
+  {
+    "id": "t101",
+    "en": "seed bank",
+    "zh": "种子库",
+    "source": "术语 1"
+  },
+  {
+    "id": "t102",
+    "en": "hibernation",
+    "zh": "冬眠",
+    "source": "术语 1"
+  },
+  {
+    "id": "t103",
+    "en": "aestivation",
+    "zh": "夏眠",
+    "source": "术语 1"
+  },
+  {
+    "id": "t104",
+    "en": "migration",
+    "zh": "迁徙",
+    "source": "术语 1"
+  },
+  {
+    "id": "t105",
+    "en": "alleles",
+    "zh": "等位基因",
+    "source": "术语 1"
+  },
+  {
+    "id": "t106",
+    "en": "genetic drift",
+    "zh": "遗传漂变",
+    "source": "术语 1"
+  },
+  {
+    "id": "t107",
+    "en": "genetic bottleneck",
+    "zh": "遗传瓶颈",
+    "source": "术语 1"
+  },
+  {
+    "id": "t108",
+    "en": "rare species",
+    "zh": "稀有物种",
+    "source": "术语 1"
+  },
+  {
+    "id": "t109",
+    "en": "extinction",
+    "zh": "灭绝",
+    "source": "术语 1"
+  },
+  {
+    "id": "t110",
+    "en": "chromosome",
+    "zh": "染色体",
+    "source": "术语 1"
+  },
+  {
+    "id": "t111",
+    "en": "genotype",
+    "zh": "遗传型",
+    "source": "术语 1"
+  },
+  {
+    "id": "t112",
+    "en": "phenotype",
+    "zh": "表现型",
+    "source": "术语 1"
+  },
+  {
+    "id": "t113",
+    "en": "gene pool",
+    "zh": "基因库",
+    "source": "术语 1"
+  },
+  {
+    "id": "t114",
+    "en": "Dominant Species",
+    "zh": "优势种",
+    "source": "术语 2"
+  },
+  {
+    "id": "t115",
+    "en": "Constructive Species",
+    "zh": "建群种",
+    "source": "术语 2"
+  },
+  {
+    "id": "t116",
+    "en": "Subdominant Species",
+    "zh": "亚优势种",
+    "source": "术语 2"
+  },
+  {
+    "id": "t117",
+    "en": "Species Richness",
+    "zh": "物种丰富度",
+    "source": "术语 2"
+  },
+  {
+    "id": "t118",
+    "en": "Abundance",
+    "zh": "多度",
+    "source": "术语 2"
+  },
+  {
+    "id": "t119",
+    "en": "Coverage",
+    "zh": "盖度",
+    "source": "术语 2"
+  },
+  {
+    "id": "t120",
+    "en": "Frequency",
+    "zh": "频度",
+    "source": "术语 2"
+  },
+  {
+    "id": "t121",
+    "en": "Important Value",
+    "zh": "重要值",
+    "source": "术语 2"
+  },
+  {
+    "id": "t122",
+    "en": "Life Form",
+    "zh": "生活型",
+    "source": "术语 2"
+  },
+  {
+    "id": "t123",
+    "en": "Synusia",
+    "zh": "层片",
+    "source": "术语 2"
+  },
+  {
+    "id": "t124",
+    "en": "Ecotone",
+    "zh": "群落交错区",
+    "source": "术语 2"
+  },
+  {
+    "id": "t125",
+    "en": "Edge Effect",
+    "zh": "边缘效应",
+    "source": "术语 2"
+  },
+  {
+    "id": "t126",
+    "en": "Community Boundary",
+    "zh": "群落边界",
+    "source": "术语 2"
+  },
+  {
+    "id": "t127",
+    "en": "Community Succession",
+    "zh": "群落演替",
+    "source": "术语 2"
+  },
+  {
+    "id": "t128",
+    "en": "Primary Succession",
+    "zh": "原生演替",
+    "source": "术语 2"
+  },
+  {
+    "id": "t129",
+    "en": "Secondary Succession",
+    "zh": "次生演替",
+    "source": "术语 2"
+  },
+  {
+    "id": "t130",
+    "en": "Cyclic Succession",
+    "zh": "循环演替",
+    "source": "术语 2"
+  },
+  {
+    "id": "t131",
+    "en": "Climax",
+    "zh": "演替顶极",
+    "source": "术语 2"
+  },
+  {
+    "id": "t132",
+    "en": "Climax Community",
+    "zh": "顶极群落",
+    "source": "术语 2"
+  },
+  {
+    "id": "t133",
+    "en": "Resource Ratio Hypothesis",
+    "zh": "资源比假说",
+    "source": "术语 2"
+  },
+  {
+    "id": "t134",
+    "en": "Ecological Countermeasures",
+    "zh": "生态对策",
+    "source": "术语 2"
+  },
+  {
+    "id": "t135",
+    "en": "Energy Flow",
+    "zh": "能量流动",
+    "source": "术语 2"
+  },
+  {
+    "id": "t136",
+    "en": "Information Transmission",
+    "zh": "信息传递",
+    "source": "术语 2"
+  },
+  {
+    "id": "t137",
+    "en": "Ecological Equilibrium",
+    "zh": "生态平衡",
+    "source": "术语 2"
+  },
+  {
+    "id": "t138",
+    "en": "Negative Feedback",
+    "zh": "负反馈",
+    "source": "术语 2"
+  },
+  {
+    "id": "t139",
+    "en": "Positive Feedback",
+    "zh": "正反馈",
+    "source": "术语 2"
+  },
+  {
+    "id": "t140",
+    "en": "Producer",
+    "zh": "生产者",
+    "source": "术语 2"
+  },
+  {
+    "id": "t141",
+    "en": "Consumer",
+    "zh": "消费者",
+    "source": "术语 2"
+  },
+  {
+    "id": "t142",
+    "en": "Decomposer",
+    "zh": "分解者",
+    "source": "术语 2"
+  },
+  {
+    "id": "t143",
+    "en": "Trophic Level",
+    "zh": "营养级",
+    "source": "术语 2"
+  },
+  {
+    "id": "t144",
+    "en": "Grazing Food Chain",
+    "zh": "牧食食物链",
+    "source": "术语 2"
+  },
+  {
+    "id": "t145",
+    "en": "Detrital Food Chain",
+    "zh": "碎屑食物链",
+    "source": "术语 2"
+  },
+  {
+    "id": "t146",
+    "en": "Production",
+    "zh": "生产量",
+    "source": "术语 2"
+  },
+  {
+    "id": "t147",
+    "en": "Biomass",
+    "zh": "生物量",
+    "source": "术语 2"
+  },
+  {
+    "id": "t148",
+    "en": "Primary Production",
+    "zh": "初级生产力",
+    "source": "术语 2"
+  },
+  {
+    "id": "t149",
+    "en": "Secondary Production",
+    "zh": "次级生产力",
+    "source": "术语 2"
+  },
+  {
+    "id": "t150",
+    "en": "Gross Primary Productivity",
+    "zh": "总初级生产力",
+    "source": "术语 2"
+  },
+  {
+    "id": "t151",
+    "en": "Net Primary Productivity",
+    "zh": "净初级生产力",
+    "source": "术语 2"
+  },
+  {
+    "id": "t152",
+    "en": "Chemical Cycle",
+    "zh": "物质循环",
+    "source": "术语 2"
+  },
+  {
+    "id": "t153",
+    "en": "Biogeochemical Cycle",
+    "zh": "生物地球化学循环",
+    "source": "术语 2"
+  },
+  {
+    "id": "t154",
+    "en": "Pool",
+    "zh": "库",
+    "source": "术语 2"
+  },
+  {
+    "id": "t155",
+    "en": "Flow",
+    "zh": "流",
+    "source": "术语 2"
+  },
+  {
+    "id": "t156",
+    "en": "Water Cycle",
+    "zh": "水循环",
+    "source": "术语 2"
+  },
+  {
+    "id": "t157",
+    "en": "Gaseous Cycle",
+    "zh": "气体循环",
+    "source": "术语 2"
+  },
+  {
+    "id": "t158",
+    "en": "Sedimentary Cycle",
+    "zh": "沉积循环",
+    "source": "术语 2"
+  },
+  {
+    "id": "t159",
+    "en": "Missing Carbon Sink",
+    "zh": "碳失汇现象",
+    "source": "术语 2"
+  },
+  {
+    "id": "t160",
+    "en": "Denitrification",
+    "zh": "反硝化作用",
+    "source": "术语 2"
+  },
+  {
+    "id": "t161",
+    "en": "Nitrogen Deposition",
+    "zh": "氮沉降",
+    "source": "术语 2"
+  },
+  {
+    "id": "t162",
+    "en": "Acid Rain",
+    "zh": "酸雨",
+    "source": "术语 2"
+  },
+  {
+    "id": "t163",
+    "en": "Latitudinal Zonality",
+    "zh": "纬度地带性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t164",
+    "en": "Longitude Zonality",
+    "zh": "经度地带性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t165",
+    "en": "Vertical Zonality",
+    "zh": "垂直地带性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t166",
+    "en": "Tropical Rainforest",
+    "zh": "热带雨林",
+    "source": "术语 2"
+  },
+  {
+    "id": "t167",
+    "en": "Sub-tropical Rainforest",
+    "zh": "亚热带季雨林",
+    "source": "术语 2"
+  },
+  {
+    "id": "t168",
+    "en": "Temperate Deciduous Forest",
+    "zh": "温带落叶阔叶林",
+    "source": "术语 2"
+  },
+  {
+    "id": "t169",
+    "en": "Boreal Forest",
+    "zh": "北方针叶林",
+    "source": "术语 2"
+  },
+  {
+    "id": "t170",
+    "en": "Tundra",
+    "zh": "冻原",
+    "source": "术语 2"
+  },
+  {
+    "id": "t171",
+    "en": "Steppe",
+    "zh": "草原",
+    "source": "术语 2"
+  },
+  {
+    "id": "t172",
+    "en": "Savanna",
+    "zh": "稀树草原",
+    "source": "术语 2"
+  },
+  {
+    "id": "t173",
+    "en": "Mangrove",
+    "zh": "红树林",
+    "source": "术语 2"
+  },
+  {
+    "id": "t174",
+    "en": "Biodiversity",
+    "zh": "生物多样性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t175",
+    "en": "Stress",
+    "zh": "胁迫",
+    "source": "术语 2"
+  },
+  {
+    "id": "t176",
+    "en": "Tolerance",
+    "zh": "耐性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t177",
+    "en": "Ruderal",
+    "zh": "杂草型",
+    "source": "术语 2"
+  },
+  {
+    "id": "t178",
+    "en": "Species Diversity",
+    "zh": "物种多样性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t179",
+    "en": "Genetic Diversity",
+    "zh": "遗传多样性",
+    "source": "术语 2"
+  },
+  {
+    "id": "t180",
+    "en": "Pioneer Species",
+    "zh": "先锋物种",
+    "source": "术语 2"
+  },
+  {
+    "id": "t181",
+    "en": "Disturbance",
+    "zh": "干扰",
+    "source": "术语 2"
+  },
+  {
+    "id": "t182",
+    "en": "Vegetation",
+    "zh": "植被",
+    "source": "术语 2"
+  },
+  {
+    "id": "t183",
+    "en": "Biome",
+    "zh": "生物群系",
+    "source": "术语 2"
+  },
+  {
+    "id": "t184",
+    "en": "Eutrophication",
+    "zh": "富营养化",
+    "source": "术语 2"
+  },
+  {
+    "id": "t185",
+    "en": "Endemic Species",
+    "zh": "特有种",
+    "source": "术语 2"
+  },
+  {
+    "id": "t186",
+    "en": "Rare Species",
+    "zh": "稀有种",
+    "source": "术语 2"
+  },
+  {
+    "id": "t187",
+    "en": "Habitat Fragmentation",
+    "zh": "生境破碎化",
+    "source": "术语 2"
+  },
+  {
+    "id": "t188",
+    "en": "Greenhouse Effect",
+    "zh": "温室效应",
+    "source": "术语 2"
+  },
+  {
+    "id": "t189",
+    "en": "Ozone",
+    "zh": "臭氧",
+    "source": "术语 2"
+  },
+  {
+    "id": "t190",
+    "en": "Soil Erosion",
+    "zh": "土壤侵蚀",
+    "source": "术语 2"
+  }
+]
+  </script>
   <script>
     const QUESTION_BANK = JSON.parse(document.getElementById("question-bank").textContent);
+    const TERM_BANK = JSON.parse(document.getElementById("term-bank").textContent);
     const QUIZ_SIZE = 20;
+    const TERM_QUIZ_SIZE = 10;
     const STORAGE_KEY = "forestEcologyMistakeBook.v1";
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const state = {
       quiz: [],
       selected: {},
+      typed: {},
       submitted: false,
       filter: "all",
       mode: "practice",
@@ -4185,6 +5386,8 @@
     const liveStatus = document.getElementById("live-status");
     const modePracticeButton = document.getElementById("mode-practice");
     const modeMistakesButton = document.getElementById("mode-mistakes");
+    const modeEnZhButton = document.getElementById("mode-en-zh");
+    const modeZhEnButton = document.getElementById("mode-zh-en");
     const mistakeCount = document.getElementById("mistake-count");
     const clearMistakesButton = document.getElementById("clear-mistakes");
 
@@ -4251,15 +5454,49 @@
       return state.selected[questionId] || [];
     }
 
+    function getTyped(questionId) {
+      return state.typed[questionId] || "";
+    }
+
+    function isTermMode(mode = state.mode) {
+      return mode === "en-zh" || mode === "zh-en";
+    }
+
+    function normalizeTermAnswer(value) {
+      return String(value)
+        .toLowerCase()
+        .replace(/[’']/g, "")
+        .replace(/[（）()]/g, "")
+        .replace(/[\s,，.。;；:：/\-—–_·]/g, "")
+        .trim();
+    }
+
+    function isTermCorrect(question) {
+      const typed = normalizeTermAnswer(getTyped(question.id));
+      const answer = normalizeTermAnswer(question.answer);
+      if (!typed || !answer) return false;
+      if (typed === answer) return true;
+      return typed.length >= 2 && answer.length >= 2 && (answer.includes(typed) || typed.includes(answer));
+    }
+
     function isAnswered(question) {
+      if (question.type === "term") {
+        return getTyped(question.id).trim().length > 0;
+      }
       return getSelected(question.id).length > 0;
     }
 
     function isCorrect(question) {
+      if (question.type === "term") {
+        return isTermCorrect(question);
+      }
       return sameSet(getSelected(question.id), question.answer_indices);
     }
 
     function answerText(question) {
+      if (question.type === "term") {
+        return question.answer;
+      }
       return question.answer_indices
         .map((index) => `${letters[index]}. ${question.choices[index]}`)
         .join("；");
@@ -4280,6 +5517,8 @@
     function recordMistakes() {
       const now = new Date().toISOString();
       state.quiz.forEach((question) => {
+        if (question.type === "term") return;
+
         const selected = getSelected(question.id);
         const existing = state.mistakeBook[question.id];
 
@@ -4307,14 +5546,27 @@
     }
 
     function setModeButtons() {
-      const practice = state.mode === "practice";
-      modePracticeButton.classList.toggle("is-active", practice);
-      modePracticeButton.setAttribute("aria-pressed", String(practice));
-      modeMistakesButton.classList.toggle("is-active", !practice);
-      modeMistakesButton.setAttribute("aria-pressed", String(!practice));
-      const newQuizLabel = practice
-        ? `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组`
-        : `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>刷新错题`;
+      const modeButtons = [
+        [modePracticeButton, "practice"],
+        [modeMistakesButton, "mistakes"],
+        [modeEnZhButton, "en-zh"],
+        [modeZhEnButton, "zh-en"]
+      ];
+
+      modeButtons.forEach(([button, mode]) => {
+        const active = state.mode === mode;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+
+      let newQuizLabel = `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20l5.8-5.8"/><path d="M15 4l6 6"/><path d="M4 4l5.2 5.2"/><path d="M14.8 14.8L21 21"/><path d="M16 21h5v-5"/></svg>换一组`;
+      if (state.mode === "mistakes") {
+        newQuizLabel = `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>刷新错题`;
+      } else if (state.mode === "en-zh") {
+        newQuizLabel = `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>换一组英译汉`;
+      } else if (state.mode === "zh-en") {
+        newQuizLabel = `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>换一组汉译英`;
+      }
       document.getElementById("new-quiz").innerHTML = newQuizLabel;
       document.getElementById("bottom-new-quiz").innerHTML = newQuizLabel;
     }
@@ -4366,6 +5618,10 @@
     }
 
     function renderQuestion(question) {
+      if (question.type === "term") {
+        return renderTermQuestion(question);
+      }
+
       const quizNumber = state.quiz.indexOf(question) + 1;
       const selected = getSelected(question.id);
       const mistakeEntry = getMistakeEntry(question.id);
@@ -4418,6 +5674,43 @@
       `;
     }
 
+    function renderTermQuestion(question) {
+      const quizNumber = state.quiz.indexOf(question) + 1;
+      const typed = getTyped(question.id);
+      const reviewedClass = state.submitted ? " is-reviewed" : "";
+      const statusClass = state.submitted
+        ? isCorrect(question)
+          ? " is-correct"
+          : isAnswered(question)
+            ? " is-wrong"
+            : " is-unanswered"
+        : "";
+      const inputClass = state.submitted
+        ? isCorrect(question)
+          ? " is-correct"
+          : " is-wrong"
+        : "";
+      const disabled = state.submitted ? " disabled" : "";
+      const modeLabel = question.direction === "en-zh" ? "英译汉" : "汉译英";
+      const placeholder = question.direction === "en-zh" ? "输入中文译名" : "输入英文术语";
+
+      return `
+        <article class="question-card${statusClass}${reviewedClass}" data-question-id="${question.id}">
+          <div class="question-head">
+            <span class="question-no">${quizNumber}</span>
+            <div>
+              <h2 class="question-title">${escapeHtml(question.stem)}</h2>
+              <div class="question-meta">${modeLabel} · 生态学专业术语</div>
+            </div>
+          </div>
+          <div class="term-answer-box">
+            <input class="translation-input${inputClass}" type="text" value="${escapeHtml(typed)}" data-term-id="${question.id}" placeholder="${placeholder}" autocomplete="off"${disabled}>
+          </div>
+          <p class="answer-line"><strong>正确答案：</strong>${escapeHtml(answerText(question))}</p>
+        </article>
+      `;
+    }
+
     function escapeHtml(value) {
       return String(value)
         .replaceAll("&", "&amp;")
@@ -4434,6 +5727,7 @@
       const questionId = input.dataset.questionId;
       const value = Number(input.value);
       const question = state.quiz.find((item) => item.id === questionId);
+      if (!question) return;
 
       if (question.answer_indices.length > 1) {
         const current = new Set(getSelected(questionId));
@@ -4450,19 +5744,32 @@
       renderQuiz();
     }
 
+    function handleTermInput(event) {
+      const input = event.target;
+      if (!input.matches("input[data-term-id]")) return;
+
+      state.typed[input.dataset.termId] = input.value;
+      updateAnsweredCount();
+    }
+
     function submitQuiz() {
       state.submitted = true;
-      recordMistakes();
+      if (!isTermMode()) {
+        recordMistakes();
+      }
       state.filter = "all";
       reviewFilter.value = "all";
       renderQuiz();
       const correct = state.quiz.filter(isCorrect).length;
-      liveStatus.textContent = `已判分，答对 ${correct} 道。错题本已更新。`;
+      liveStatus.textContent = isTermMode()
+        ? `已判分，答对 ${correct} 道。`
+        : `已判分，答对 ${correct} 道。错题本已更新。`;
       scorePanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function resetAnswers() {
       state.selected = {};
+      state.typed = {};
       state.submitted = false;
       state.filter = "all";
       reviewFilter.value = "all";
@@ -4472,6 +5779,7 @@
 
     function resetSession() {
       state.selected = {};
+      state.typed = {};
       state.submitted = false;
       state.filter = "all";
       reviewFilter.value = "all";
@@ -4497,9 +5805,33 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function startTermQuiz(direction) {
+      state.mode = direction;
+      resetSession();
+      state.quiz = shuffle(TERM_BANK).slice(0, TERM_QUIZ_SIZE).map((term, index) => {
+        const enToZh = direction === "en-zh";
+        return {
+          type: "term",
+          id: `term-${direction}-${term.id}-${index}`,
+          direction,
+          stem: enToZh ? term.en : term.zh,
+          answer: enToZh ? term.zh : term.en,
+          termId: term.id
+        };
+      });
+      renderQuiz();
+      const modeLabel = direction === "en-zh" ? "英译汉" : "汉译英";
+      liveStatus.textContent = `已随机抽取 ${TERM_QUIZ_SIZE} 道${modeLabel}术语题。`;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     function startQuiz() {
       if (state.mode === "mistakes") {
         startMistakeQuiz();
+        return;
+      }
+      if (isTermMode()) {
+        startTermQuiz(state.mode);
         return;
       }
       startPracticeQuiz();
@@ -4515,6 +5847,7 @@
     }
 
     quizForm.addEventListener("change", handleChoiceChange);
+    quizForm.addEventListener("input", handleTermInput);
     document.getElementById("new-quiz").addEventListener("click", startQuiz);
     document.getElementById("submit-quiz").addEventListener("click", submitQuiz);
     document.getElementById("reset-answers").addEventListener("click", resetAnswers);
@@ -4523,6 +5856,8 @@
     document.getElementById("bottom-reset-answers").addEventListener("click", resetAnswers);
     modePracticeButton.addEventListener("click", startPracticeQuiz);
     modeMistakesButton.addEventListener("click", startMistakeQuiz);
+    modeEnZhButton.addEventListener("click", () => startTermQuiz("en-zh"));
+    modeZhEnButton.addEventListener("click", () => startTermQuiz("zh-en"));
     clearMistakesButton.addEventListener("click", clearMistakeBook);
     reviewFilter.addEventListener("change", (event) => {
       state.filter = event.target.value;
